@@ -40,21 +40,10 @@ export default function TopbarUser() {
     
       <div className=" "> 
         <div className="row">
-         
-          {/* <div className="col-12 mt-2 mr-0">
-              
-                Jones Ferdinand 
-              
-          </div>
-          <div className="col-">
-            <img src={userpic} height="40" width="40" className="rounded-circle" alt="user"/>
-          </div> */}
           <div className="col-12">
             <span>Jones Ferdinand </span>
-            <span ><a><img src={userpic} height="40" width="40" className="rounded-circle " alt="user"/></a></span>
+            <span><a><img src={userpic} height="40" width="40" className="rounded-circle " alt="user"/></a></span>
           </div>
-         
-
         </div>
       </div>
   );
