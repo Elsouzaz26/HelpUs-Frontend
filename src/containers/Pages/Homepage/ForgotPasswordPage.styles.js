@@ -13,6 +13,10 @@ const ForgotPasswordWrapper = styled.div`
     margin-top:-90px
   }
 }
+
+card:hover {
+  background:red
+}
    
 `;
 

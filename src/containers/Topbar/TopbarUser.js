@@ -51,7 +51,7 @@ export default function TopbarUser() {
           </div> */}
           <div className="col-12">
             <span>Jones Ferdinand </span>
-            <span><img src={userpic} height="40" width="40" className="rounded-circle" alt="user"/></span>
+            <span ><a><img src={userpic} height="40" width="40" className="rounded-circle " alt="user"/></a></span>
           </div>
          
 

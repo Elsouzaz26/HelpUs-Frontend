@@ -1,8 +1,9 @@
 import React from "react";
 import { MeterWrapper } from "./View.styles";
 import TopbarUser from "../../../Topbar/TopbarUser";
-import userpic from "../../../../assets/images/User.png"
-
+import userpic from "../../../../assets/images/User.png";
+import { Popover } from "antd";
+import { MoreOutlinedBlack } from "../../../../assets/Icons";
 export default function () {
   return (
     <MeterWrapper>
@@ -19,54 +20,75 @@ export default function () {
             <TopbarUser />
           </span>
         </div>
-      <div className="card">
-    
-      <table class="table table-borderless">
-        
-  <thead>
-  
-    <tr>
-      
-   
-      <th scope="col">Name</th>
-          
-     
-     
-     
-     <th scope="col">City</th>
-    <th scope="col">Date</th>
-    <th scope="col">Assigned to a group?</th>
-    </tr>
-   
-  </thead>
-  <tbody className="">
-    <tr>
-      
-      <td> <img src={userpic} height="40" width="40" className="rounded-circle" alt="user"/>      Mark</td>
-      <td>Otto</td>
-      <td>@mdo</td>
-    </tr>
-    <tr>
-      
-      <td> <img src={userpic} height="40" width="40" className="rounded-circle" alt="user"/>       Jacob</td>
-      <td>Thornton</td>
-      <td>@fat</td>
-    </tr>
-    <tr>
-      
-      <td> <img src={userpic} height="40" width="40" className="rounded-circle" alt="user"/>        Larry </td>
-      <td>the Bird</td>
-      <td>@twitter</td>
-    </tr>
-  </tbody>
-</table>
+        <div className="card">
+          <table class="table  table-hover">
+            <thead>
+              <tr>
+                <th scope="col">Name</th>
 
+                <th scope="col">City</th>
+                <th scope="col">Date</th>
+                <th scope="col">Assigned to a group?</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  {" "}
+                  <img
+                    src={userpic}
+                    height="40"
+                    width="40"
+                    className="rounded-circle"
+                    alt="user"
+                  />{" "}
+                  Mark
+                </td>
+                <td>Raanana</td>
+                <td>May 26, 2019 </td>
+                <td>
+                  {" "}
+                  <span class="lead">
+                    <span class="badge badge-pill badge-danger">NO</span>
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  {" "}
+                  <img
+                    src={userpic}
+                    height="40"
+                    width="40"
+                    className="rounded-circle"
+                    alt="user"
+                  />{" "}
+                  Mark
+                </td>
+                <td>Raanana</td>
+                <td>May 26, 2019 </td>
+                <td className="w-25">
+                  {" "}
+                  <span class="lead">
+                    <span class="badge badge-pill badge-danger">NO</span>
+                  </span>
+                  <span className="float-right"><Popover placement="bottomRight">{MoreOutlinedBlack}</Popover></span>
+                  
+                  {/* <div class="bg-info clearfix">
+  <span  class="float-left badge badge-pill badge-danger">NO</span>
+  <span  class=" float-right"><Popover
+                 
+                 placement="bottomRight"
+               >
+                 {MoreOutlinedBlack}
+               </Popover></span>
+</div> */}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
-
-
-      </div>
-
-
     </MeterWrapper>
   );
 }
