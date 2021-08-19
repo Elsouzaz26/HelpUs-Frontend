@@ -110,6 +110,7 @@ const SidebarWrapper = styled.div`
         font-size: 14px;
         color: inherit;
         font-weight: bold;
+        margin-left:30px;
         ${transition()};
       }
 

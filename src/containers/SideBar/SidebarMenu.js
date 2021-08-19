@@ -38,9 +38,9 @@ export default React.memo(function SidebarMenu({
       <SubMenu
         key={key}
         title={
-          <span className="isoMenuHolder" style={submenuColor}>
+          <span className="isoMenuHolder" style={submenuColor} >
             {leftIcon}
-            <span className="nav-text">
+            <span className="nav-text" >
               <IntlMessages id={label} />
             </span>
           </span>
@@ -53,7 +53,7 @@ export default React.memo(function SidebarMenu({
             : `${url}/${child.key}`;
           return (
             <Menu.Item style={submenuStyle} key={child.key}>
-              <Link style={submenuColor} to={linkTo}>
+              <Link style={submenuColor} to={linkTo} className="ml-2">
                 <IntlMessages id={child.label} />
               </Link>
             </Menu.Item>

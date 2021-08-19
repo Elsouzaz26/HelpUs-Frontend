@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import ForgotPasswordWrapper from "./ForgotPasswordPage.styles";
+import HomepageWrapper from "./HomePage.styles";
 import TopbarUser from "../../Topbar/TopbarUser";
 import bgImage from "../../../assets/images/forgotpassword.png";
 import { BackIcon1 } from "../../../assets/Icons";
@@ -35,7 +35,7 @@ const bgLeaver2=()=>{
 }
 
   return (
-    <ForgotPasswordWrapper>
+    <HomepageWrapper>
       <div className="container">
         <div className="row ">
           <div className="col-md-6"></div>
@@ -45,12 +45,12 @@ const bgLeaver2=()=>{
         </div>
 
         <div className="row">
-          <div className="col-12 text-center">
+          <div className="col-12 text-center ">
             <img className="img1" src={Helpus} />
           </div>
         </div>
 
-        <div className="row mt-4">
+        <div className="row mt-3">
           {" "}
           <div className="col-md-12 text-center ">
             {" "}
@@ -63,7 +63,7 @@ const bgLeaver2=()=>{
               <img class="card-img-top" src={senior} alt="Card image cap" />
               <h3 className="text-center">Senior</h3>
              <div className="p-2 mt-5">
-                <a href="#" class="btn btn-light w-100">
+                <a href="dashboard/senior/view" class="btn btn-light w-100">
                   ALL SENIORS VIEW
                 </a>
                 <a href="#" class="btn btn-light w-100 mt-2 ">
@@ -80,7 +80,7 @@ const bgLeaver2=()=>{
               <img class="card-img-top" src={volenteer} alt="Card image cap" />
               <h3 className="text-center">Volenteer</h3>
               <div className="p-2 mt-5">
-                <a href="#" class="btn btn-light w-100">
+                <a href="dashboard/volenteer/view" class="btn btn-light w-100">
                   ALL VOLENTEER VIEW
                 </a>
                 <a href="#" class="btn btn-light w-100 mt-2 ">
@@ -113,7 +113,7 @@ const bgLeaver2=()=>{
         <div className="row mt-5"></div>
       </div>
       
-    </ForgotPasswordWrapper>
+    </HomepageWrapper>
   );
 };
 

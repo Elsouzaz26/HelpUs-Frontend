@@ -37,14 +37,50 @@ export default function TopbarUser() {
   );
 
   return (
-    
-      <div className=" "> 
-        <div className="row">
-          <div className="col-12">
-            <span>Jones Ferdinand </span>
-            <span><a><img src={userpic} height="40" width="40" className="rounded-circle " alt="user"/></a></span>
+    <div className=" ">
+      
+        {/* <div className="col-12 mt-2 mr-0">
+              
+                Jones Ferdinand 
+              
           </div>
-        </div>
-      </div>
+          <div className="col-">
+            <img src={userpic} height="40" width="40" className="rounded-circle" alt="user"/>
+          </div> */}
+        
+          <div className="row">
+            <div className="col-10  text-right">
+              <span
+                className=""
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  color: "#252733",
+                  fontWeight: "600",
+                }}
+              >
+                <span>Jones Ferdinand</span>
+                <a className="text-primary">Not you?</a>{" "}
+              </span>
+            </div>
+                <div className="col-2">
+                <span>
+                <a>
+                  <img
+                    src={userpic}
+                    height="50"
+                    width="50"
+                    className="rounded-circle border border-5"
+                    alt="user"
+                  />
+                </a>
+              </span>
+                </div>
+             
+            
+          </div>
+     
+     
+    </div>
   );
 }

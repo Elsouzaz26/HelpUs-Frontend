@@ -13,7 +13,14 @@ const routes = [
     exact: true,
   },
   {
-    path: `senior-view`,
+    path: `volenteer/view`,
+    component: lazy(() =>
+      import("./Pages/Volenteer/View")
+    ),
+    exact: true,
+  },
+  {
+    path: `senior/view`,
     component: lazy(() =>
       import("./Pages/Senior/View")
     ),

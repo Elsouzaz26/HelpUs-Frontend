@@ -1,11 +1,14 @@
 import styled from "styled-components";
 import { palette } from "styled-theme";
 
-const MeterWrapper = styled.div`
-  .table {
-    border: none;
-  }
-
+const ViewWrapper = styled.div`
+  
+  .table{
+    border-collapse: collapse;
+}
+.firstLine td{
+    border-bottom: 2px solid black;
+}
 
   .btnSettings {
     border: 1px solid #2196f3;
@@ -145,4 +148,4 @@ const MeterWrapper = styled.div`
   }
 `;
 
-export { MeterWrapper };
+export { ViewWrapper };

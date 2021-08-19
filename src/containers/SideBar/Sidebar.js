@@ -116,6 +116,7 @@ export default function Sidebar() {
           >
             {options.map((singleOption) => (
               <SidebarMenu
+              
                 key={singleOption.key}
                 submenuStyle={submenuStyle}
                 submenuColor={submenuColor}

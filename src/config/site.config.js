@@ -5,7 +5,7 @@ import  {LetterIcon} from "../assets/Icons"
 export default {
   siteName: "MBK Controls",
   siteIcon: <LetterIcon />,
-  footerText: `MBK Controls @ ${new Date().getFullYear()} Created MBK, Inc`,
+  footerText: `HelpUs @ ${new Date().getFullYear()} Created Help us, Inc`,
   enableAnimatedRoute: false,
   // Remote server:
   apiUrl: "https://machine.mbkcontrols.com/api/",

@@ -19,10 +19,7 @@ export const Auth = {
   },
   async login({ username, password }) {
     localStorage.clear();
-    // instance.interceptors.request.use((config) => {
-    //   delete config.headers["Authorization"];
-    //   return config;
-    // });
+   
 
     const response = await instance
       .post(`/authenticate`, { username, password })
