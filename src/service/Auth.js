@@ -15,20 +15,19 @@ instance.interceptors.response.use(
 export const Auth = {
   authenticated() {
     // return !!localStorage.getItem("token");
+
     return true
   },
-  async login({ username, password }) {
-    localStorage.clear();
-   
 
-    const response = await instance
+  async login({ username, password }) {
+
+    return await instance
       .post(`/authenticate`, { username, password })
       .then((res) => {
         try {
           console.log("auth login");
           console.log(res);
           const { token, user } = res.data;
-          localStorage.setItem("profile", JSON.stringify(user));
           localStorage.setItem("token", token);
           setAuthorizationToken(token);
         } catch (error) {
@@ -38,7 +37,6 @@ export const Auth = {
   },
   logout() {
     try {
-      localStorage.removeItem("profile");
       localStorage.removeItem("token");
       instance.interceptors.request.use((config) => {
         delete config.headers["Authorization"];

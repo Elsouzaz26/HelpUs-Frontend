@@ -6,7 +6,7 @@ import IntlMessages from "../../components/utility/intlMessages";
 import userpic from "../../assets/images/User.png";
 import { Auth } from "../../service/Auth";
 import TopbarDropdownWrapper from "./TopbarDropdown.styles";
-import { ArrowDownIcon } from "../../assets/Icons";
+import { ArrowDownIcon,Divider } from "../../assets/Icons";
 
 // const { logout } = authAction;
 
@@ -49,9 +49,10 @@ export default function TopbarUser() {
           </div> */}
         
           <div className="row">
-            <div className="col-10  text-right">
+            <div className="col-11 ">
+              <span className="p-2">{Divider}</span>
               <span
-                className=""
+                className="float-right"
                 style={{
                   display: "flex",
                   flexDirection: "column",
@@ -60,24 +61,22 @@ export default function TopbarUser() {
                 }}
               >
                 <span>Jones Ferdinand</span>
-                <a className="text-primary">Not you?</a>{" "}
+                <a className="text-primary mt-0">Not you?</a>{" "}
               </span>
             </div>
-                <div className="col-2">
-                <span>
+            <div className="col-1 p-0">
+              <span>
                 <a>
                   <img
                     src={userpic}
-                    height="50"
-                    width="50"
+                    height="40"
+                    width="40"
                     className="rounded-circle border border-5"
                     alt="user"
                   />
                 </a>
               </span>
-                </div>
-             
-            
+            </div>
           </div>
      
      

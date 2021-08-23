@@ -20,9 +20,52 @@ const routes = [
     exact: true,
   },
   {
+    path: `volenteer/edit`,
+    component: lazy(() =>
+      import("./Pages/Volenteer/Edit")
+    ),
+    exact: true,
+  },
+  {
+    path: `volenteer/add`,
+    component: lazy(() =>
+      import("./Pages/Volenteer/Add")
+    ),
+    exact: true,
+  },
+  {
     path: `senior/view`,
     component: lazy(() =>
       import("./Pages/Senior/View")
+    ),
+    exact: true,
+  },
+  {
+    path: `senior/edit`,
+    component: lazy(() =>
+      import("./Pages/Senior/Edit")
+    ),
+    exact: true,
+  },
+  {
+    path: `senior/add`,
+    component: lazy(() =>
+      import("./Pages/Senior/Add")
+    ),
+    exact: true,
+  },
+  {
+    path: `groups/view`,
+    component: lazy(() =>
+      import("./Pages/Groups/View")
+    ),
+    exact: true,
+  },
+
+  {
+    path: `groups/add`,
+    component: lazy(() =>
+      import("./Pages/Groups/GroupPage")
     ),
     exact: true,
   },

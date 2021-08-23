@@ -3,7 +3,7 @@ import { palette } from "styled-theme";
 import WithDirection from "../../../library/helpers/rtl";
 
 
-const ForgotPasswordWrapper = styled.div`
+const VolenteerHomepageWrapper = styled.div`
 @media screen and (min-width: 768px) {
   .img1 {
     display: block;
@@ -20,4 +20,4 @@ card:hover {
    
 `;
 
-export default WithDirection(ForgotPasswordWrapper);
+export default WithDirection(VolenteerHomepageWrapper);

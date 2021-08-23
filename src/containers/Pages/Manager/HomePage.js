@@ -7,7 +7,11 @@ import Helpus from "../../../assets/images/Helpus.png";
 import senior from "../../../assets/images/seniorCard.png";
 import volenteer from "../../../assets/images/volenteerCard.png";
 import groups from "../../../assets/images/groupsCard.png";
-const ForgotPasswordPage = () => {
+import { useHistory } from "react-router-dom";
+
+
+const AdminHomePage = () => {
+const history = useHistory();
 const [cardColor,setCardColor]=useState("#DFE0EB")
 const [cardColor1,setCardColor1]=useState("#DFE0EB")
 const [cardColor2,setCardColor2]=useState("#DFE0EB")
@@ -33,6 +37,26 @@ const bgEnter2=()=>{
 const bgLeaver2=()=>{
   setCardColor2("#DFE0EB")
 }
+
+const allSeniorsView = (event) => {
+  history.push("/manager/senior/view");
+}
+const addASeniorView = (event) => {
+  history.push('/manager/senior/add');
+}
+const editASeniorView = (event) => {
+  history.push("/manager/senior/edit");
+}
+const allVolenteerView = (event) => {
+  history.push("/manager/volenteer/view");
+}
+const addAVolenteerView = (event) => {
+  history.push('/manager/volenteer/add');
+}
+const editAVolenteerView = (event) => {
+  history.push("/manager/volenteer/edit");
+}
+
 
   return (
     <HomepageWrapper>
@@ -61,15 +85,15 @@ const bgLeaver2=()=>{
           <div className="col-md-4">
             <div class="card "onMouseEnter={bgEnter} onMouseLeave={bgLeaver} style={{ background:`${cardColor}`,height:"35.5rem"}}>
               <img class="card-img-top" src={senior} alt="Card image cap" />
-              <h3 className="text-center">Senior</h3>
+              <h3 className="text-center">SENIOR</h3>
              <div className="p-2 mt-5">
-                <a href="dashboard/senior/view" class="btn btn-light w-100">
+                <a onClick={allSeniorsView} class="btn btn-light w-100">
                   ALL SENIORS VIEW
                 </a>
-                <a href="#" class="btn btn-light w-100 mt-2 ">
+                <a onClick={addASeniorView} class="btn btn-light w-100 mt-2 ">
                   ADD A SENIOR
                 </a>
-                <a href="#" class="btn btn-light w-100 mt-2 ">
+                <a onClick={editASeniorView} class="btn btn-light w-100 mt-2 ">
                   EDIT A SENIOR
                 </a>
                 </div>
@@ -78,15 +102,15 @@ const bgLeaver2=()=>{
           <div className="col-md-4">
             <div class="card  " onMouseEnter={bgEnter1} onMouseLeave={bgLeaver1} style={{ background:`${cardColor1}`,height:"35.5rem" }}>
               <img class="card-img-top" src={volenteer} alt="Card image cap" />
-              <h3 className="text-center">Volenteer</h3>
+              <h3 className="text-center">VOLENTEER</h3>
               <div className="p-2 mt-5">
-                <a href="dashboard/volenteer/view" class="btn btn-light w-100">
+                <a onClick={allVolenteerView} class="btn btn-light w-100">
                   ALL VOLENTEER VIEW
                 </a>
-                <a href="#" class="btn btn-light w-100 mt-2 ">
+                <a onClick={addAVolenteerView} class="btn btn-light w-100 mt-2 ">
                   ADD A VOLENTEER
                 </a>
-                <a href="#" class="btn btn-light w-100 mt-2 ">
+                <a onClick={editAVolenteerView} class="btn btn-light w-100 mt-2 ">
                   EDIT A VOLENTEER
                 </a>
               </div>
@@ -95,16 +119,16 @@ const bgLeaver2=()=>{
           <div className="col-md-4">
             <div class="card  " onMouseEnter={bgEnter2} onMouseLeave={bgLeaver2}style={{ background:`${cardColor2}`,height:"35.5rem"  }}>
               <img class="card-img-top" src={groups} alt="Card image cap" />
-              <h3 className="text-center">Groups</h3>
+              <h3 className="text-center">DISTRIBUTION</h3>
               <div className="p-2 mt-5">
-                <a href="#" class="btn btn-light w-100">
-                  ALL GROUPS VIEW
+                <a href="manager/groups/view" class="btn btn-light w-100">
+                  ALL DISTRIBUTION VIEW
                 </a>
-                <a href="#" class="btn btn-light w-100 mt-2 ">
-                  ADD A GROUP
+                <a href="manager/groups/add" class="btn btn-light w-100 mt-2 ">
+                  ADD A DISTRIBUTION
                 </a>
-                <a href="#" class="btn btn-light w-100 mt-2 ">
-                  EDIT A GROUP
+                <a href="manager/groups/edit" class="btn btn-light w-100 mt-2 ">
+                  RENEW/EDIT A DISTRIBUTION
                 </a>
               </div>
             </div>
@@ -117,10 +141,4 @@ const bgLeaver2=()=>{
   );
 };
 
-export default ForgotPasswordPage;
-{
-  /* <img height="400px" style={{marginTop:"-70px"}}
-width=" 400px"
-
- src={Helpus} /> */
-}
+export default AdminHomePage;

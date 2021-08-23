@@ -9,9 +9,14 @@ import {
 import { PUBLIC_ROUTE, PRIVATE_ROUTE } from "./route.constants";
 import Loader from "./components/utility/loader";
 import { Auth } from "./service/Auth";
+import AdminHomePage from "./containers/Pages/Manager/HomePage";
+import VolenteerHomePage from "./containers/Pages/Volenteer/HomePage";
+
 // const ProductionSettings = lazy(() => import("./containers/Production/ProductionSettings/ProductionSettings"));
 
-const Dashboard = lazy(() => import("./containers/Dashboard/Dashboard"));
+const Manager = lazy(() => import("./containers/Manager/Manager"));
+const Volenteer = lazy(() => import("./containers/Volenteer/Volenteer"));
+
 
 const publicRoutes = [
   {
@@ -22,38 +27,6 @@ const publicRoutes = [
   {
     path: PUBLIC_ROUTE.SIGN_IN,
     component: lazy(() => import("./containers/Pages/Login/LoginPage")),
-  },
-  {
-    path: PUBLIC_ROUTE.HOME,
-    component: lazy(() =>
-      import("./containers/Pages/Homepage/HomaPage")
-    ),
-  },
-  {
-    path: PUBLIC_ROUTE.VERIFY_CODE,
-    component: lazy(() =>
-      import("./containers/Pages/VerifyCode/VerifyCodePage")
-    ),
-  },
-  {
-    path: PUBLIC_ROUTE.RESET_PASSWORD,
-    component: lazy(() =>
-      import("./containers/Pages/ConfirmPassword/ConfirmPasswordPage")
-    ),
-  },
-  {
-    path: PUBLIC_ROUTE.RESET_DONE,
-    component: lazy(() => import("./containers/Pages/ResetDone/ResetDonePage")),
-  },
-  {
-    path: PUBLIC_ROUTE.CHANGE_PASSWORD,
-    component: lazy(() =>
-      import("./containers/Pages/ChangePassword/ChangePasswordPage")
-    ),
-  },
-  {
-    path: PUBLIC_ROUTE.PROFILE,
-    component: lazy(() => import("./containers/Pages/Profile/ProfilePage")),
   },
   
 ];
@@ -91,9 +64,18 @@ export default function Routes() {
             </Route>
           ))}
 
-          <PrivateRoute path="/dashboard">
-            <Dashboard />
+          <PrivateRoute path="/manager">
+            <Manager />
           </PrivateRoute>
+
+          <PrivateRoute path="/volenteer">
+            <Volenteer />
+          </PrivateRoute>
+
+          <PrivateRoute path="/manager-home" component={AdminHomePage}></PrivateRoute>
+
+          <PrivateRoute path="/volenteer-home" component={VolenteerHomePage}></PrivateRoute>
+          
         </Switch>
       </Router>
     </Suspense>

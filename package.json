@@ -26,6 +26,8 @@
     "react-custom-scrollbars": "^4.2.1",
     "react-d3-speedometer": "^1.0.1",
     "react-dom": "^16.13.1",
+    "react-google-autocomplete": "^2.4.0",
+    "react-google-maps": "^9.4.5",
     "react-intl": "2.9",
     "react-modal": "^3.14.3",
     "react-model": "^4.0.2",
