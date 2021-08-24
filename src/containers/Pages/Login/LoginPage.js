@@ -16,7 +16,7 @@ const LoginPage = () => {
 
   const history = useHistory()
   const dispatch = useDispatch()
-  const [email, setEmail] = useState('');
+  const [emailAddress, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [userRole, setUserRole] = useState('');
 
@@ -28,16 +28,24 @@ const LoginPage = () => {
     setPassword(event.target.value);
   }
 
-  const onSubmit = (e) => {
-    console.log(email, password);
-    if (email === 'manager@helpus.com') {
-      dispatch(setUser({ user: "manager" }))
+  const onSubmit = async(e) => {
+    e.preventDefault();
+    let formData={
+      emailAddress,
+      password
+    }
+  let data= await Auth.login(formData)
+  console.log("role",data.user.role)
+  if(Auth.authenticated()){
+    if (data.user.role === 'manager') {
+      dispatch(setUser({ user: data.user }))
       history.push('/manager-home')
     } else {
-      dispatch(setUser({ user: "volenteer" }))
+      dispatch(setUser({ user: data.user }))
       history.push('/volenteer-home')
     }
   }
+}
 
   return (
     <LogInWrapper>
@@ -74,7 +82,7 @@ const LoginPage = () => {
                     type="text"
                     placeholder="ridho.tijan@gmail.com"
                     onChange={getEmail}
-                    value={email}
+                    value={emailAddress}
                   />
                 </div>
 

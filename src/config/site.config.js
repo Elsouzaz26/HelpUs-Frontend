@@ -3,7 +3,7 @@ import { DeploymentUnitOutlined } from "@ant-design/icons";
 import  {LetterIcon} from "../assets/Icons"
 
 export default {
-  siteName: "MBK Controls",
+  siteName: "Help us Elsa",
   siteIcon: <LetterIcon />,
   footerText: `HelpUs @ ${new Date().getFullYear()} Created Help us, Inc`,
   enableAnimatedRoute: false,
@@ -13,5 +13,4 @@ export default {
   // Local Dev
   apiUrl: "http://localhost:8000",
   socketUrl: "http://localhost:8000",
-  dashboard: "/dashboard",
 };

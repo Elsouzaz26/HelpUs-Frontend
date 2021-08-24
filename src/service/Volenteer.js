@@ -1,4 +1,4 @@
-import axios from "axios";
+
 import {Auth} from "./Auth"
 import { instance } from "../config/api.config";
 
@@ -17,15 +17,12 @@ export const Volenteer = {
   
   async getVolenteer() {
    
-    const response = await instance
-      .get(`/get-user`)
-      .then((res) => {
-        try {
-          console.log(res);
-        } catch (error) {
-          console.log(error);
-        }
-      });
+    return await instance
+      .get(`/roles?data=volenteer`).then(res=>{
+        console.log("response",res)
+        return res
+      })
+     
   },
   
 };

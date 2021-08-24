@@ -1,5 +1,6 @@
-import axios from "axios";
 import { instance, setAuthorizationToken } from "../config/api.config";
+import jwt_decode from "jwt-decode";
+ 
 
 instance.interceptors.response.use(
   (response) => {
@@ -14,22 +15,27 @@ instance.interceptors.response.use(
 
 export const Auth = {
   authenticated() {
-    // return !!localStorage.getItem("token");
-
-    return true
+    var token = localStorage.getItem("token");
+    var decoded = jwt_decode(token)
+    console.log("decoded",decoded)
+    if((decoded.user.emailAddress)!==localStorage.getItem("email")){
+      window.location.replace("/signin")
+    }
+    return !!localStorage.getItem("token");
   },
 
-  async login({ username, password }) {
-
+  async login(data) {
     return await instance
-      .post(`/authenticate`, { username, password })
+      .post(`/signin`, data)
       .then((res) => {
         try {
           console.log("auth login");
-          console.log(res);
+          console.log(res)
           const { token, user } = res.data;
           localStorage.setItem("token", token);
+          localStorage.setItem("email",user.emailAddress)
           setAuthorizationToken(token);
+          return res.data
         } catch (error) {
           console.log(error);
         }
@@ -38,6 +44,7 @@ export const Auth = {
   logout() {
     try {
       localStorage.removeItem("token");
+      localStorage.removeItem("email")
       instance.interceptors.request.use((config) => {
         delete config.headers["Authorization"];
         return config;

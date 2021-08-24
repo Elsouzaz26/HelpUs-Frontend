@@ -3,14 +3,11 @@ import siteConfig from "./site.config";
 
 const token = localStorage.getItem("token");
 
-console.log("apiUrl", siteConfig.apiUrl);
-
 
 export const instance = axios.create({
   baseURL: siteConfig.apiUrl,
-  timeout: 15000,
   headers: {
-    Authorization: `${token}`,
+    Authorization: `Bearer ${null}`,
     "Content-Type": "application/json",
   },
 });
