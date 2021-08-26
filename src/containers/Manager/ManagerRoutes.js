@@ -77,6 +77,13 @@ const routes = [
     exact: true,
   },
   {
+    path: `distribution/view`,
+    component: lazy(() =>
+      import("./Pages/Distribution/View")
+    ),
+    exact: true, 
+  },
+  {
     path: `chat`,
     component: lazy(() =>
       import("./Pages/Chat/Chat")

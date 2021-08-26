@@ -2,30 +2,81 @@ import React, { useState } from "react";
 import { AddWrapper } from "./Add.styled";
 import TopbarUser from "../../../Topbar/TopbarUser";
 import { Toast } from "../../../../service/Toast";
-
+import Autocomplete from "react-google-autocomplete";
+import { Volenteer } from "../../../../service/Volenteer"
 
 const AddPage = () => {
-  const [formdata, setFormData] = useState({
-    gender: "",
-    fullName: "",
-    addressStreet: "",
-    addressCity: "",
-    emailAddress: "",
-    telePhone: "",
-    password: "",
-  });
-  const handleFormData = (e) => {
-    const name = e.target.name;
-    const value = e.target.value;
-
-    setFormData({ ...formdata, [name]: value });
-
-    console.log({ [name]: value });
-  };
+  const [gender, setGender] = useState("");
+  const [age, setAge] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [addressStreet, setAddressStreet] = useState("canada");
+  const [addressCity, setAddressCity] = useState("");
+  const [emailAddress, setEmailAddress] = useState("");
+  const [telePhone, setTelePhone] = useState("");
+  const [password, setPassword] = useState("");
+  const [role, setRole] = useState("volenteer");
+  const [groupAdded, setGroupAdded] = useState(false);
+  const [needsMedicalSupply, setNeedsMedicalSupply] = useState(false);
+  const [needsFoodSupply, setNeedsFoodSupply] = useState(false);
+  const [lat, setLat] = useState();
+  const [lng, setLng] = useState();
+  const [img, setImg] = useState("");
   const showRecord = (e) => {
     e.preventDefault();
-    Toast.fire("success",'volenteer added')
-    console.log(formdata);
+    const data = {
+      gender,
+      age,
+      fullName,
+      addressStreet,
+      addressCity,
+      emailAddress,
+      telePhone,
+      role,
+      password,
+      groupAdded,
+      needsMedicalSupply,
+      needsFoodSupply,
+      lat,
+      lng,
+      img,
+    };
+    console.log(data);
+
+    (async () => {
+      Volenteer.addVolenteer(data)
+        .then((res) => {
+          if (res) {
+            setAge("");
+            setEmailAddress("");
+            setFullName("");
+            setTelePhone("");
+            setPassword("");
+            setNeedsFoodSupply("");
+            setNeedsMedicalSupply("");
+            setAddressCity("");
+            setAddressStreet("");
+            setGender("");
+            Toast.fire("success", "Volenteer Added");
+          }
+
+          console.log(res);
+        })
+        .catch((err) => {
+          if (err) {
+            setAge("");
+            setEmailAddress("");
+            setFullName("");
+            setTelePhone("");
+            setPassword("");
+            setNeedsFoodSupply("");
+            setNeedsMedicalSupply("");
+            setAddressCity("");
+            setAddressStreet("");
+            setGender("");
+            Toast.fire("error", `${err.data.msg}`);
+          }
+        });
+    })();
   };
 
   return (
@@ -58,8 +109,8 @@ const AddPage = () => {
                         class="form-check-input"
                         id="male"
                         value="male"
-                        checked={formdata.gender === "male"}
-                        onChange={handleFormData}
+                        checked={gender === "male"}
+                        onChange={(e)=>{setGender(e.target.value)}}
                         name="gender"
                       />
                       Male
@@ -72,8 +123,8 @@ const AddPage = () => {
                         class="form-check-input"
                         id="female"
                         value="female"
-                        checked={formdata.gender === "female"}
-                        onChange={handleFormData}
+                        checked={gender === "female"}
+                        onChange={(e)=>{setGender(e.target.value)}}
                         name="gender"
                       />
                       Female
@@ -81,85 +132,137 @@ const AddPage = () => {
                   </div>
                 </div>
               </div>
-              <div className="form-group">
+              <div class="form-group">
                 <label for="" className="labels">
                   Email address
                 </label>
                 <input
                   type="email"
-                  className="form-control bgColForm"
-                  id="exampleInputEmail1"
+                  class="form-control"
+                  id="emailAddress"
                   aria-describedby="emailHelp"
-                  placeholder="Enter email"
-                  onChange={handleFormData}
-                  value={formdata.emailAddress}
+                  value={emailAddress}
                   name="emailAddress"
+                  onChange={(e) => {
+                    setEmailAddress(e.target.value);
+                  }}
+                  placeholder="Enter email"
                 />
-                <small id="emailHelp" className="form-text text-muted">
+                <small id="emailHelp" class="form-text text-muted">
                   We'll never share your email with anyone else.
                 </small>
               </div>
-              <div className="form-group">
+              <div class="form-group">
                 <label for="" className="labels">
                   Telephone
                 </label>
                 <input
                   type="text"
-                  className="form-control  bgColForm"
-                  id=""
+                  class="form-control  bgColForm"
+                  id="telePhone"
                   aria-describedby=""
-                  placeholder="05 44 55 44 44"
-                  onChange={handleFormData}
-                  value={formdata.telePhone}
+                  onChange={(e) => {
+                    setTelePhone(e.target.value);
+                  }}
                   name="telePhone"
+                  value={telePhone}
+                  placeholder="05 44 55 44 44"
                 />
               </div>
-              <div className="form-group">
+              <div class="form-group">
                 <label for="" className="labels">
                   Name & Surname
                 </label>
                 <input
                   type="text"
-                  className="form-control  bgColForm"
-                  id=""
+                  class="form-control  bgColForm"
+                  id="fullName"
                   aria-describedby=""
-                  placeholder="22 Smilansky "
-                  onChange={handleFormData}
-                  value={formdata.fullName}
+                  onChange={(e) => {
+                    setFullName(e.target.value);
+                  }}
                   name="fullName"
+                  vlaue={fullName}
+                  placeholder="22 Smilansky "
                 />
               </div>
+             
 
-              <div className="form-group">
+              <div class="form-group">
                 <label for="" className="labels">
                   Address street
                 </label>
-                <input
+                <div>
+                  <Autocomplete
+                    style={{
+                      padding: "10px",
+                      fontWeight: "450",
+                      fontSize: "16px",
+                    }}
+                    className="autoInput"
+                    apiKey={"AIzaSyC43U2-wqXxYEk1RBrTLdkYt3aDoOxO4Fw"}
+                    onPlaceSelected={(place) => {
+                      console.log(place);
+                      setAddressCity(place.formatted_address);
+                    }}
+                    options={{
+                      types: ["(regions)"],
+                    }}
+                    name="addressStreet"
+                    id="addressStreet"
+                    value={addressCity}
+                  />
+                </div>
+                {/* <input
                   type="text"
-                  className="form-control bgColForm"
-                  id=""
+                  class="form-control autocomplete bgColForm"
+                  id="addressStreet"
                   aria-describedby=""
-                  placeholder="22 Smilansky"
-                  value={formdata.addressStreet}
                   name="addressStreet"
-                  onChange={handleFormData}
-                />
+                  value={addressStreet}
+                  placeholder="22 Smilansky"
+                /> */}
               </div>
 
-              <div className="form-group">
+              <div class="form-group">
                 <label for="" className="labels">
                   City
                 </label>
-                <input
+                <div>
+                  <Autocomplete
+                    style={{
+                      padding: "10px",
+                      fontWeight: "450",
+                      fontSize: "16px",
+                    }}
+                    placeholder="Enter AddressCity"
+                    className="autoInput"
+                    apiKey={"AIzaSyC43U2-wqXxYEk1RBrTLdkYt3aDoOxO4Fw"}
+                    onPlaceSelected={(place) => {
+                      setAddressCity(place.formatted_address);
+                      console.log(place);
+                      const latitude = place.geometry.location.lat();
+                      const longitude = place.geometry.location.lng();
+                      setLat(latitude);
+                      setLng(longitude);
+                    }}
+                    options={{
+                      types: ["(cities)"],
+                    }}
+                    name="addressCity"
+                    id="addressCity"
+                  />
+                </div>
+                {/* <input
                   type="text"
-                  className="form-control  bgColForm"
-                  id=""
+                  class="form-control autocomplete  bgColForm"
+                  ref={ref}
+                  id="addressCity"
                   aria-describedby=""
-                  placeholder="Netanya"
-                  onChange={handleFormData}
-                  value={formdata.addressCity}
+                  value={addressCity}
                   name="addressCity"
-                />
+                  placeholder=""
+                /> */}
               </div>
               <div className="form-group">
                 <label for="pwd" className="labels">
@@ -170,10 +273,11 @@ const AddPage = () => {
                   className="form-control"
                   id="pwd"
                   placeholder="Enter password"
-                  name="pswd"
                   required
-                  onChange={handleFormData}
-                  value={formdata.password}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                  }}
+                  value={password}
                   name="password"
                 />
                 <div className="valid-feedback">Valid.</div>
@@ -181,6 +285,7 @@ const AddPage = () => {
                   You will be able to login
                 </small>
               </div>
+
 
               <div className="mt-5 pt-3">
                 <button

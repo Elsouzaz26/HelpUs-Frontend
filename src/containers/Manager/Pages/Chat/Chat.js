@@ -14,6 +14,7 @@ import Socket from "../../../../config/socket.config"
 import { Chats } from "../../../../service/Chat";
 import { userSelector } from "../../../../redux/user";
 import { Messages } from "../../../../service/Message";
+import {Toast} from "../../../../service/Toast";
 
 // import chat from "../../../../../../backend/models/chat";
 
@@ -28,8 +29,8 @@ export default function ManagerChat() {
   const [To, setTo] = useState("")
   const [From, setFrom] = useState("")
   const [Newmessage, setNewmessage] = useState("")
-
   const {user} = useSelector(userSelector);
+
   useEffect(() => {
 
     (async () => {
@@ -57,38 +58,8 @@ export default function ManagerChat() {
     }
   }
 
-  const [chats, setChats] = useState([
-    { "id": 1, "name": "Banjamin", "date": "16 jan", "message": "Hello Guys, this is my linked in redeign concept enjoy,", "image": "", "active": false },
-    { "id": 2, "name": "Banjamin", "date": "16 jan", "message": "Hello Guys, this is my linked in redeign concept enjoy,", "image": "", "active": false },
-    { "id": 3, "name": "Banjamin", "date": "16 jan", "message": "Hello Guys, this is my linked in redeign concept enjoy,", "image": "", "active": false },
-    { "id": 4, "name": "Banjamin", "date": "16 jan", "message": "Hello Guys, this is my linked in redeign concept enjoy,", "image": "", "active": false },
-    { "id": 5, "name": "Banjamin", "date": "16 jan", "message": "Hello Guys, this is my linked in redeign concept enjoy,", "image": "", "active": false },
-    { "id": 6, "name": "Banjamin", "date": "16 jan", "message": "Hello Guys, this is my linked in redeign concept enjoy,", "image": "", "active": false },
-    { "id": 7, "name": "Banjamin", "date": "16 jan", "message": "Hello Guys, this is my linked in redeign concept enjoy,", "image": "", "active": false },
-    { "id": 8, "name": "Banjamin", "date": "16 jan", "message": "Hello Guys, this is my linked in redeign concept enjoy,", "image": "", "active": false },
-    { "id": 9, "name": "Banjamin", "date": "16 jan", "message": "Hello Guys, this is my linked in redeign concept enjoy,", "image": "", "active": false },
-    { "id": 10, "name": "Banjamin", "date": "16 jan", "message": "Hello Guys, this is my linked in redeign concept enjoy,", "image": "", "active": false },
-    { "id": 11, "name": "Banjamin", "date": "16 jan", "message": "Hello Guys, this is my linked in redeign concept enjoy,", "image": "", "active": false },
-    { "id": 12, "name": "Banjamin", "date": "16 jan", "message": "Hello Guys, this is my linked in redeign concept enjoy,", "image": "", "active": false },
-    { "id": 13, "name": "Banjamin", "date": "16 jan", "message": "Hello Guys, this is my linked in redeign concept enjoy,", "image": "", "active": false },
-  ])
-
-
-  const [messages, setMessages] = useState([
-    { "id": 1, "name": "Nik", "message": "Hi jhjghgjh hj hh  ghj gg h hg hj hjg hjg hjg hjg h ghj g h g hjg hj g hj g" },
-    { "id": 2, "name": "Nik", "message": "Hi jhjghgjh hj hh  ghj gg h hg hj hjg hjg hjg hjg h ghj g h g hjg hj g hj g" },
-    { "id": 1, "name": "Nik", "message": "Hi jhjghgjh hj hh  ghj gg h hg hj hjg hjg hjg hjg h ghj g h g hjg hj g hj g" },
-    { "id": 1, "name": "Nik", "message": "Hi jhjghgjh hj hh  ghj gg h hg hj hjg hjg hjg hjg h ghj g h g hjg hj g hj g" },
-    { "id": 2, "name": "Nik", "message": "Hi jhjghgjh hj hh  ghj gg h hg hj hjg hjg hjg hjg h ghj g h g hjg hj g hj g" },
-    { "id": 2, "name": "Nik", "message": "Hi jhjghgjh hj hh  ghj gg h hg hj hjg hjg hjg hjg h ghj g h g hjg hj g hj g" },
-    { "id": 1, "name": "Nik", "message": "Hi jhjghgjh hj hh  ghj gg h hg hj hjg hjg hjg hjg h ghj g h g hjg hj g hj g" },
-    { "id": 2, "name": "Nik", "message": "Hi jhjghgjh hj hh  ghj gg h hg hj hjg hjg hjg hjg h ghj g h g hjg hj g hj g" },
-    { "id": 2, "name": "Nik", "message": "Hi jhjghgjh hj hh  ghj gg h hg hj hjg hjg hjg hjg h ghj g h g hjg hj g hj g" },
-    { "id": 1, "name": "Nik", "message": "Hi jhjghgjh hj hh  ghj gg h hg hj hjg hjg hjg hjg h ghj g h g hjg hj g hj g" },
-    { "id": 2, "name": "Nik", "message": "Hi jhjghgjh hj hh  ghj gg h hg hj hjg hjg hjg hjg h ghj g h g hjg hj g hj g" },
-    { "id": 2, "name": "Nik", "message": "Hi jhjghgjh hj hh  ghj gg h hg hj hjg hjg hjg hjg h ghj g h g hjg hj g hj g" },
-
-  ])
+  const [chats, setChats] = useState([])
+  const [messages, setMessages] = useState([])
 
   const handleBack = () => {
     setShowChatContainer(true)
@@ -98,15 +69,27 @@ export default function ManagerChat() {
     setNewmessage(e.target.value)
   }
 
+  const validate=()=>{
+    let formIsValid = true;
+        if (!Newmessage) {
+          formIsValid = false;
+          Toast.fire("error","message is required")
+        }
+        return formIsValid
+  }
+
   const onSubmit = (e) => {
     e.preventDefault();
+    if(validate()){
     Socket.emit("new-message", {
       room: ActiveChatID,
       to: To,
       from: From,
       message: Newmessage
     })
+    setNewmessage("")
   }
+}
 
   const handleChatClick = (index) => {
 
@@ -137,16 +120,17 @@ export default function ManagerChat() {
     }))
   }
 
-  const getMessaages = (id) => {
+  const getMessaages = async(id) => {
     Messages.getMessage(id).then((res) => {
-      console.log("res",res)
+      console.log("res",res.data)
+      setMessages([...res.data])
     }).catch()
   }
 
 
   Socket.on("on-new-message", (data) => {
     console.log("frontend", data)
-    setMessages([...data])
+    setMessages([...messages,data])
   })
 
   return (

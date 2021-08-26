@@ -6,8 +6,13 @@ import Frame from "../../../../assets/images/Frame.png";
 import Chat from "../../../../components/uielements/Chat/Chat";
 import ActiveUser from "../../../../components/uielements/ActiveUser/ActiveUser";
 import Message from "../../../../components/uielements/Message/Message";
-import { useDispatch } from "react-redux";
+import Socket from "../../../../config/socket.config"
+import { Chats } from "../../../../service/Chat";
+import { useDispatch, useSelector } from "react-redux";
 import { setChat } from "../../../../redux/chat";
+import { userSelector } from "../../../../redux/user";
+import { Messages } from "../../../../service/Message";
+import {Toast} from "../../../../service/Toast";
 
 export default function VolenteerChat() {
 
@@ -16,7 +21,22 @@ export default function VolenteerChat() {
   const [showChatContainer, setShowChatContainer] = useState(true);
   const [showMessageContainer, setShowMessageContainer] = useState(true);
 
+  const [chats, setChats] =useState([])
+  const [messages, setMessages] = useState([])
+  const [ActiveChatID, setActiveChatId] = useState("")
+  const [To, setTo] = useState("")
+  const [From, setFrom] = useState("")
+  const [Newmessage, setNewmessage] = useState("")
+  const {user} = useSelector(userSelector);
+
   useEffect(() => {
+    (async () => {
+      Chats.getChats().then(res => {
+        console.log(res.data)
+        setChats([...res.data])
+      })
+        .catch(err => console.log(err))
+    })();
     if(typeof window !== undefined) {
       window.addEventListener("resize", handleResize)
     }
@@ -33,33 +53,35 @@ export default function VolenteerChat() {
     }
   } 
 
-  const [chats, setChats] =useState([
-    {"id": 1,  "name": "Banjamin", "date": "16 jan", "message": "Hello Guys, this is my linked in redeign concept enjoy,", "image": "", "active": false},
-   ])
-
-
-  const [messages, setMessages] = useState([
-    {"id": 1 ,"name": "Nik", "message": "Hi jhjghgjh hj hh  ghj gg h hg hj hjg hjg hjg hjg h ghj g h g hjg hj g hj g"},
-    {"id": 2, "name": "Nik", "message": "Hi jhjghgjh hj hh  ghj gg h hg hj hjg hjg hjg hjg h ghj g h g hjg hj g hj g"},
-    {"id": 1,"name": "Nik", "message": "Hi jhjghgjh hj hh  ghj gg h hg hj hjg hjg hjg hjg h ghj g h g hjg hj g hj g"},
-    {"id": 1 ,"name": "Nik", "message": "Hi jhjghgjh hj hh  ghj gg h hg hj hjg hjg hjg hjg h ghj g h g hjg hj g hj g"},
-    {"id": 2, "name": "Nik", "message": "Hi jhjghgjh hj hh  ghj gg h hg hj hjg hjg hjg hjg h ghj g h g hjg hj g hj g"},
-    {"id": 2,"name": "Nik", "message": "Hi jhjghgjh hj hh  ghj gg h hg hj hjg hjg hjg hjg h ghj g h g hjg hj g hj g"},
-    {"id": 1 ,"name": "Nik", "message": "Hi jhjghgjh hj hh  ghj gg h hg hj hjg hjg hjg hjg h ghj g h g hjg hj g hj g"},
-    {"id": 2, "name": "Nik", "message": "Hi jhjghgjh hj hh  ghj gg h hg hj hjg hjg hjg hjg h ghj g h g hjg hj g hj g"},
-    {"id": 2,"name": "Nik", "message": "Hi jhjghgjh hj hh  ghj gg h hg hj hjg hjg hjg hjg h ghj g h g hjg hj g hj g"},
-    {"id": 1 ,"name": "Nik", "message": "Hi jhjghgjh hj hh  ghj gg h hg hj hjg hjg hjg hjg h ghj g h g hjg hj g hj g"},
-    {"id": 2, "name": "Nik", "message": "Hi jhjghgjh hj hh  ghj gg h hg hj hjg hjg hjg hjg h ghj g h g hjg hj g hj g"},
-    {"id": 2,"name": "Nik", "message": "Hi jhjghgjh hj hh  ghj gg h hg hj hjg hjg hjg hjg h ghj g h g hjg hj g hj g"},
-
-  ])
-
   const handleBack = () => {
     setShowChatContainer(true)
     setShowMessageContainer(false)
   }
 
+  const handleChange = (e) => {
+    setNewmessage(e.target.value)
+  }
+  const validate=()=>{
+    let formIsValid = true;
+        if (!Newmessage) {
+          formIsValid = false;
+          Toast.fire("error","message is required")
+        }
+        return formIsValid
+  }
+  const onSubmit = (e) => {
+    e.preventDefault();
+    if(validate()){
+    Socket.emit("new-message", {
+      room: ActiveChatID,
+      to: To,
+      from: From,
+      message: Newmessage
+    })
 
+    setNewmessage("")
+  }
+}
   const handleChatClick = (index) => {
 
     if (window.innerWidth < 991) {
@@ -67,16 +89,41 @@ export default function VolenteerChat() {
       setShowChatContainer(false)
     }
 
-    let activeChat = chats.filter((chat, i) => i === index )[0];
-
+    let activeChat = chats.filter((chat, i) => i === index)[0];
+    console.log(activeChat)
+    setActiveChatId(activeChat._id)
+    console.log(user._id)
+    if (activeChat.user1._id !== user._id) {
+      setTo(activeChat.user1._id)
+      setFrom(activeChat.user2._id)
+    } else {
+      setTo(activeChat.user2._id)
+      setFrom(activeChat.user1._id)
+    }
+    Socket.emit("join-room", { room: activeChat._id })
     // fetch last 10 message from chat here from service/chat
-    dispatch(setChat({chat: activeChat}))
-
+    getMessaages(activeChat._id) // last 10 message
+    dispatch(setChat({ chat: activeChat }))
     setChats(chats.map((chat, i) => {
-      i === index ? chat.active = true : chat.active = false 
+      i === index ? chat.active = true : chat.active = false
+
       return chat
     }))
   }
+
+  const getMessaages = async(id) => {
+    Messages.getMessage(id).then((res) => {
+      console.log("res",res.data)
+      setMessages([...res.data])
+    }).catch()
+  }
+
+
+  Socket.on("on-new-message", (data) => {
+    console.log("frontend", data)
+    setMessages([...messages,data])
+  })
+
 
   
   return (
@@ -127,10 +174,10 @@ export default function VolenteerChat() {
                       <div className="row p-4">
 
                       <div className="col-10">
-                          <input type="text" className="form-control message-input" placeholder="write a message..."/>
+                          <input type="text" className="form-control message-input" value={Newmessage}onChange={handleChange} placeholder="write a message..."/>
                       </div>
                       <div className="col-2">
-                        <button className="btn btn-primary br-15">Send</button>
+                        <button className="btn btn-primary br-15"onClick={onSubmit}>Send</button>
                       </div>
                       </div>
 

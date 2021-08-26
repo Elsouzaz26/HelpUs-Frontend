@@ -14,15 +14,15 @@ export default function Message({message}) {
 //  const user={id:1}
 
 const {user}=useSelector(userSelector);
-console.log("user",user)
+console.log("user",user._id)
 
-console.log(message)
+console.log("message",message)
 
   return (
     <MessagePageWrapper>
       <div className="row">
         {
-          user && message && (user._id === message.id ) ? 
+          user && message && (user._id===message.from._id || user._id===message.from) ? 
 
           // me in chat
           <div className="col-xl-6 col-lg-12 offset-xl-6 mb-3">

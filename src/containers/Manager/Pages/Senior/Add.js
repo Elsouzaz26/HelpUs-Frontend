@@ -5,21 +5,23 @@ import { usePlacesWidget } from "react-google-autocomplete";
 import { Toast } from "../../../../service/Toast";
 import Autocomplete from "react-google-autocomplete";
 import { Senior } from "../../../../service/Senior";
-
+import img1 from "../../../../assets/images/Login.png";
 const AddPage = () => {
-
   const [gender, setGender] = useState("");
   const [age, setAge] = useState("");
   const [fullName, setFullName] = useState("");
-  const [addressStreet, setAddressStreet] = useState("");
+  const [addressStreet, setAddressStreet] = useState("canada");
   const [addressCity, setAddressCity] = useState("");
   const [emailAddress, setEmailAddress] = useState("");
   const [telePhone, setTelePhone] = useState("");
+  const [password, setPassword] = useState("");
+  const [role,setRole] = useState("senior");
+  const [groupAdded,setGroupAdded  ]= useState(false)
   const [needsMedicalSupply, setNeedsMedicalSupply] = useState(false);
   const [needsFoodSupply, setNeedsFoodSupply] = useState(false);
   const [lat, setLat] = useState();
   const [lng, setLng] = useState();
-
+const [img,setImg]=useState("")
   const showRecord = (e) => {
     e.preventDefault();
     const data = {
@@ -30,31 +32,44 @@ const AddPage = () => {
       addressCity,
       emailAddress,
       telePhone,
+      role,
+      password,
+      groupAdded,
       needsMedicalSupply,
       needsFoodSupply,
-      location: { lat, lng },
+      lat,
+      lng,
+      img
     };
     console.log(data);
-    (async() => {
-      
-      
-      Senior.addSenior(data).then(res => {
-        if(res){
 
-           
-          Toast.fire("success","Senior Edited")
-        }
-          
-        console.log(res)
-      
-      
+    (async () => {
+      Senior.addSenior(data)
+        .then((res) => {
+          if (res) {
+            setAge("")
+            setEmailAddress("")
+            setFullName("")
+            setTelePhone("")
+            setPassword("")
+            setNeedsFoodSupply("")
+            setNeedsMedicalSupply("")
+            setAddressCity("")
+            setAddressStreet("")
+            setGender("")
+            Toast.fire("success", "Senior Added");
+          }
+
+          console.log(res);
+        })
+        .catch((err) => {
+          if (err){
+            Toast.fire("error",`${err.data.msg}`)
+          }
+    });
         
-      })
-      .catch(err=> console.log(err))
     })();
   };
-
-
 
   return (
     <AddWrapper>
@@ -147,7 +162,7 @@ const AddPage = () => {
                   }}
                   name="fullName"
                   vlaue={fullName}
-                  placeholder="22 Smilansky "
+                  placeholder="John Doe"
                 />
               </div>
               <label class="my-1 mr-2 labels" for="gender">
@@ -172,20 +187,27 @@ const AddPage = () => {
                 <label for="" className="labels">
                   Address street
                 </label>
-                <Autocomplete
-                  apiKey={"AIzaSyC43U2-wqXxYEk1RBrTLdkYt3aDoOxO4Fw"}
-                  onPlaceSelected={(place) => {
-                    console.log(place);
-                    setAddressCity(place.formatted_address);
-                    const latitude = place.geometry.location.lat();
-                    const longitude = place.geometry.location.lng();
-                    setLat(latitude);
-                    setLng(longitude);
-                  }}
-                  options={{
-                    types: ["(regions)"],
-                  }}
-                />
+                <div>
+                  <Autocomplete
+                    style={{
+                      padding: "10px",
+                      fontWeight: "450",
+                      fontSize: "16px",
+                    }}
+                    className="autoInput"
+                    apiKey={"AIzaSyC43U2-wqXxYEk1RBrTLdkYt3aDoOxO4Fw"}
+                    onPlaceSelected={(place) => {
+                      console.log(place);
+                      setAddressCity(place.formatted_address);
+                     
+                    }}
+                    options={{
+                      types: ["(regions)"],
+                    }}
+                    name="addressStreet"
+                    id="addressStreet"
+                  />
+                </div>
                 {/* <input
                   type="text"
                   class="form-control autocomplete bgColForm"
@@ -201,16 +223,31 @@ const AddPage = () => {
                 <label for="" className="labels">
                   City
                 </label>
-                <Autocomplete
-                  apiKey={"AIzaSyC43U2-wqXxYEk1RBrTLdkYt3aDoOxO4Fw"}
-                  onPlaceSelected={(place) => {
-                    setAddressCity(place.formatted_address);
-                    console.log(place);
-                  }}
-                  options={{
-                    types: ["(cities)"],
-                  }}
-                />
+                <div>
+                  <Autocomplete
+                    style={{
+                      padding: "10px",
+                      fontWeight: "450",
+                      fontSize: "16px",
+                    }}
+                    placeholder="Enter AddressCity"
+                    className="autoInput"
+                    apiKey={"AIzaSyC43U2-wqXxYEk1RBrTLdkYt3aDoOxO4Fw"}
+                    onPlaceSelected={(place) => {
+                      setAddressCity(place.formatted_address);
+                      console.log(place);
+                      const latitude = place.geometry.location.lat();
+                      const longitude = place.geometry.location.lng();
+                      setLat(latitude);
+                      setLng(longitude);
+                    }}
+                    options={{
+                      types: ["(cities)"],
+                    }}
+                    name="addressCity"
+                    id="addressCity"
+                  />
+                </div>
                 {/* <input
                   type="text"
                   class="form-control autocomplete  bgColForm"
@@ -221,6 +258,27 @@ const AddPage = () => {
                   name="addressCity"
                   placeholder=""
                 /> */}
+              </div>
+              <div className="form-group">
+                <label for="pwd" className="labels">
+                  Password
+                </label>
+                <input
+                  type="password"
+                  className="form-control"
+                  id="pwd"
+                  placeholder="Enter password"
+                  required
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                  }}
+                  value={password}
+                  name="password"
+                />
+                <div className="valid-feedback">Valid.</div>
+                <small id="pwd" className="form-text text-muted">
+                  You will be able to login
+                </small>
               </div>
 
               <div class="form-check">

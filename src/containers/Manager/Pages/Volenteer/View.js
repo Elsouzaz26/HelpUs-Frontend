@@ -223,6 +223,9 @@ export default function EnhancedTable() {
     setPage(newPage);
   };
 
+  const gotoAddVolenteer = (event) => {
+    history.push('/manager/volenteer/add');
+  }
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
@@ -240,7 +243,7 @@ export default function EnhancedTable() {
           {" "}
           <h4>
             Volenteer{" "}
-            <a class="btn badge badge-pill badge-primary">Add new Volenteer</a>
+            <a class="btn badge badge-pill badge-primary" onClick={gotoAddVolenteer}>Add new Volenteer</a>
           </h4>{" "}
         </span>
         <span className="text-right">
@@ -325,7 +328,7 @@ export default function EnhancedTable() {
                           <a  className="undertext  ">{moment(users.createdAt).format("h:mm a")}</a>
                         </div>
                       </TableCell>
-                      <TableCell align="center" width={300}>
+                      <TableCell align="center">
                         {users.needMedicalSupply === "true" ? (
                           <span class="lead">
                             <span class="badge badge-pill badge-success">

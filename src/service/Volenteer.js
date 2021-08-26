@@ -28,9 +28,13 @@ export const Volenteer = {
         })
        
     },
-  async addVolenteer() {
+    async addVolenteer(data) {
    
-    return await instance.post(`/roles?data=volenteer`)
-     
-  },
+      return await instance
+        .post(`/signup`,data).then(res=>{
+          console.log("response",res)
+          return res
+        })
+       
+    },
 };

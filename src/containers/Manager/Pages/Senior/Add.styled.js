@@ -5,8 +5,20 @@ const AddWrapper=styled.div`
     background: white!important;
   }
 
+.autoInput {
+    width:100%;
+    height:2.3rem;
+    border: 1px solid rgba(204, 204, 204, 1);
+    border-radius: .16rem!important
+    padding:10px!important
+}
 
-
+.autoInput:focus {
+    outline: none;
+    border: 1px solid rgba(204, 204, 204, 1);
+   
+    box-shadow: 0 0 0 3px #a3ccfa;
+ }
 
 
   .round {

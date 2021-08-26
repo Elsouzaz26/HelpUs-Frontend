@@ -68,9 +68,9 @@ const headCells = [
   { id: "date", numeric: false, disablePadding: false, label: "Date" },
   {
     id: "groupassigned",
-    numeric: true,
+    numeric: false,
     disablePadding: false,
-    label: "Assinged to a group?",
+    label: "Status",
   },
 ];
 
@@ -145,7 +145,7 @@ const EnhancedTableToolbar = (props) => {
         id="tableTitle"
         component="div"
       >
-        All Seniors
+        All Distribution
       </Typography>
 {/* 
       <a>{Sort}</a>
@@ -235,14 +235,15 @@ export default function EnhancedTable() {
         <span class=" float-left col-6">
           {" "}
           <h4>
-            Senior{" "}
-            <a class="btn badge badge-pill badge-primary" onClick={gotoAddSenior}>Add New Senior</a>
+            Distribution View{" "}
+            <a class="btn badge badge-pill badge-primary ml-md-5" onClick={gotoAddSenior}>Add New distribution</a>
           </h4>{" "}
         </span>
         <span className="text-right">
           {" "}
           <TopbarUser />
         </span>
+        <div className="row  marginrs"><div className="col"><h5 className="ml-md-3">Group parents</h5></div></div>
       </div>
       <Paper className={classes.paper}>
         <EnhancedTableToolbar numSelected={selected.length} />
@@ -320,17 +321,17 @@ export default function EnhancedTable() {
                           <a  className="undertext  ">{moment(users.createdAt).format("h:mm a")}</a>
                         </div>
                       </TableCell>
-                      <TableCell align="center" >
+                      <TableCell align="left" width={300}>
                         {users.needMedicalSupply === "true" ? (
                           <span class="lead">
                             <span class="badge badge-pill badge-success">
-                              Yes
+                              Done
                             </span>
                           </span>
                         ) : (
                           <span class="lead">
                             <span class="badge badge-pill badge-danger">
-                              NO
+                              To do
                             </span>
                           </span>
                         )}

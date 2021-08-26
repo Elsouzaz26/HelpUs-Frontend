@@ -77,7 +77,7 @@ export default function Routes() {
           </PrivateRoute>
 
           <PrivateRoute path="/volenteer-home" >
-            <AdminHomePage></AdminHomePage>
+            <VolenteerHomePage></VolenteerHomePage>
           </PrivateRoute>
           
         </Switch>
