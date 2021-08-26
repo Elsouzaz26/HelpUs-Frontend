@@ -4,6 +4,9 @@ import { palette } from 'styled-theme';
 export const DashboardGlobalStyles = createGlobalStyle`
 body {
   -webkit-overflow-scrolling: touch;
+  ::-webkit-scrollbar {
+    display: none;
+}
 }
 `
 

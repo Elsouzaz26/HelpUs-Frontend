@@ -1,6 +1,7 @@
 import React from "react";
-import ChatPageWrapper from "./Chat.styled";
+import ChatPageWrapper from "./Chat.styled"
 import Frame from "../../../assets/images/Frame.png"
+
 
 export default function Chat({handleChatClick, index, chat}) {
 

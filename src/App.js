@@ -9,7 +9,6 @@ import Routes from "./router";
 import rootReducer from "./redux";
 // import Socket from "./config/socket.config"
 import "./index.css";
-
 const store = configureStore({ reducer: rootReducer });
 
 const App = () => (

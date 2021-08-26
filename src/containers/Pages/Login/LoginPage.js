@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/alt-text */
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, Redirect, useHistory, useLocation } from "react-router-dom";
 
 import { Auth } from "../../../service/Auth";
@@ -10,7 +10,8 @@ import bgImage from "../../../assets/images/Helpus.png";
 import topRect from "../../../assets/images/TopRect.png"
 import { LockIcon, LetterIcon } from "../../../assets/Icons";
 import { User } from "../../../service/User";
-import { setUser } from "../../../redux/users";
+import { setUser } from "../../../redux/user";
+import { Toast } from "../../../service/Toast";
 
 const LoginPage = () => {
 
@@ -20,6 +21,7 @@ const LoginPage = () => {
   const [password, setPassword] = useState('');
   const [userRole, setUserRole] = useState('');
 
+
   const getEmail = (event) => {
     setEmail(event.target.value);
   }
@@ -28,27 +30,34 @@ const LoginPage = () => {
     setPassword(event.target.value);
   }
 
-  const onSubmit = async(e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
-    let formData={
+
+    let formData = {
       emailAddress,
       password
     }
-  let data= await Auth.login(formData)
-  console.log("role",data.user.role)
-  if(Auth.authenticated()){
-    if (data.user.role === 'manager') {
+
+    let data = await Auth.login(formData)
+
+    if (data.status !== 200) {
+      return Toast.fire("error", data.data.msg)
+    }
+
+    if (data.user.role == "manager") {
       dispatch(setUser({ user: data.user }))
       history.push('/manager-home')
-    } else {
+    } else if (data.user.role == "volenteer") {
       dispatch(setUser({ user: data.user }))
       history.push('/volenteer-home')
     }
+
   }
-}
 
   return (
     <LogInWrapper>
+
+
       <div className="container-fluid ">
         <div className="row ">
           <div className="col-md-7  left-side ">

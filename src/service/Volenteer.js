@@ -2,27 +2,35 @@
 import {Auth} from "./Auth"
 import { instance } from "../config/api.config";
 
-instance.interceptors.response.use(
-  (response) => {
-    return response;
-  },
-  (error) => {
-    if (error.status === 401) {
-      Auth.logout();
-    }
-  }
-);
+
 
 export const Volenteer = {
   
   async getVolenteer() {
    
-    return await instance
-      .get(`/roles?data=volenteer`).then(res=>{
-        console.log("response",res)
-        return res
-      })
+    return await instance.get(`/roles?data=volenteer`)
      
   },
-  
+  async getByVolenteerName(fullName) {
+   
+    return await instance
+    .get(`/user?data=${fullName}`).then(res=>{
+      console.log("response",res)
+      return res
+    })
+    },
+    async editVolenteer(id,data) {
+   
+      return await instance
+        .put(`/updateuser/${id}`,data).then(res=>{
+          console.log("response",res)
+          return res
+        })
+       
+    },
+  async addVolenteer() {
+   
+    return await instance.post(`/roles?data=volenteer`)
+     
+  },
 };

@@ -72,9 +72,13 @@ export default function Routes() {
             <Volenteer />
           </PrivateRoute>
 
-          <PrivateRoute path="/manager-home" component={AdminHomePage}></PrivateRoute>
+          <PrivateRoute path="/manager-home" >
+            <AdminHomePage></AdminHomePage>
+          </PrivateRoute>
 
-          <PrivateRoute path="/volenteer-home" component={VolenteerHomePage}></PrivateRoute>
+          <PrivateRoute path="/volenteer-home" >
+            <AdminHomePage></AdminHomePage>
+          </PrivateRoute>
           
         </Switch>
       </Router>

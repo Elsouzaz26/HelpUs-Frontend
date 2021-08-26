@@ -4,16 +4,16 @@ import { instance } from "../config/api.config";
 export const initialState = {
   loading: false,
   hasError: false,
-  chat: {},
+  user: {},
 };
 
-const chatSlice = createSlice({
-  name: "chats",
+const userSlice = createSlice({
+  name: "users",
   initialState,
   reducers: {
-    setChat: (state, payload) => {
+    setUser: (state, {payload}) => {
         console.log(payload)
-       state.chat = payload.chat 
+       state.user = payload.user 
     },
    
   },
@@ -21,11 +21,11 @@ const chatSlice = createSlice({
 
 // Actions
 export const {
-  setChat,
-} = chatSlice.actions;
+  setUser,
+} = userSlice.actions;
 
 //Selector
-export const chatSelector = (state) => state.chat;
+export const userSelector = (state) => state.user;
 
 // Reducer
-export default chatSlice.reducer;
+export default userSlice.reducer;

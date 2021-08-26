@@ -5,7 +5,11 @@ const EditWrapper=styled.div`
     background: white!important;
   }
 
-
+  .labels {
+    font-weight: 25px;
+font-size: 14px;
+color: #373A3C!important
+}
 
 
 
@@ -13,7 +17,7 @@ const EditWrapper=styled.div`
     width: 80%;
     
     border-radius: 15px;
-    border: 1px #000 solid;
+    border: 0px white solid;
     
     position: absolute;
     top: 0;
@@ -30,13 +34,14 @@ const EditWrapper=styled.div`
     z-index: 10;
     border-radius: 10px;
     border: none;
-    background:; /* Set the bg image here. with "no-repeat" */
+    background:; 
 }
 
 .search {
     position: relative;
     width: 190px;
     height: 30px;
+    border:none!important
     
 }
 `;

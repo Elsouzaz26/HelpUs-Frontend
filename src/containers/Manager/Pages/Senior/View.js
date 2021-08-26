@@ -18,6 +18,9 @@ import TopbarUser from "../../../Topbar/TopbarUser";
 import { Popover } from "antd";
 import { ViewWrapper } from "./View.styles"
 import { useHistory } from 'react-router-dom';
+import { Senior } from "../../../../service/Senior";
+import { useState,useEffect } from "react";
+import moment from "moment"
 
 function createData(name, city, date, groupassigned) {
   return { name, city, date, groupassigned };
@@ -187,6 +190,19 @@ export default function EnhancedTable() {
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(8);
+  const [users,setUsers]=useState([])
+  useEffect(()=>{
+
+    (async() => {
+      Senior.getSenior().then(res => {
+        console.log(res)
+        setUsers(res.data.users)
+      })
+      .catch(err=> console.log(err))
+    })();
+      
+  },[])
+
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -206,7 +222,9 @@ export default function EnhancedTable() {
   const gotoAddSenior = (event) => {
     history.push('/manager/senior/add');
   }
-
+  const gotoEditSenior = (event) => {
+    history.push('/manager/senior/edit');
+  }
   const emptyRows =
     rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
@@ -243,17 +261,21 @@ export default function EnhancedTable() {
               onRequestSort={handleRequestSort}
               rowCount={rows.length}
             />
-            <TableBody>
-              {stableSort(rows, getComparator(order, orderBy))
+       <TableBody>
+              {stableSort(users, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => {
+                .map((users, index) => {
                   return (
                     <TableRow
                       hover
                       role="checkbox"
                       tabIndex={-1}
-                      key={row.name}
-                      onClick={()=>alert("for link to edit page")}
+                      key={users.id}
+                      onClick={(e)=>{   history.push({
+                        pathname: `/manager/senior/edit`,
+                        search: `?fullName=${users.fullName}`
+                       
+                    })}}
                     >
                       <TableCell component="th" scope="row">
                      
@@ -275,8 +297,8 @@ export default function EnhancedTable() {
                             <span
                               className="align"
                             >
-                              <span className="rname">{row.name}</span>
-                              <a className="undertext" > Updated 1 day ago</a>{" "}
+                              <span className="rname">{users.fullName}</span>
+                              <a className="undertext" > Updated {moment(users.updatedAt).fromNow()}</a>{" "}
                             </span>
                           </div>
                         </div>
@@ -286,20 +308,20 @@ export default function EnhancedTable() {
                         className="align"
                      
                       >
-                        <span className="rname">{row.city}</span>
-                        <span className=""> <a  className="undertext">on 24.05.2019</a></span>
+                        <span className="rname">{users.addressCity}</span>
+                        <span className=""> <a  className="undertext">on {moment(users.createdAt).format("D.MM.YYYY")}</a></span>
                        
                       </TableCell>
                       <TableCell align="left">
                         <div
                            className="align"
                         >
-                          <span className="rname">{row.date}</span>
-                          <a  className="undertext  ">6:30 PM</a>
+                          <span className="rname">{moment(users.createdAt).format("MMMM D,YYYY")}</span>
+                          <a  className="undertext  ">{moment(users.createdAt).format("h:mm a")}</a>
                         </div>
                       </TableCell>
                       <TableCell align="center" width={300}>
-                        {row.groupassigned === "true" ? (
+                        {users.needMedicalSupply === "true" ? (
                           <span class="lead">
                             <span class="badge badge-pill badge-success">
                               Yes

@@ -2,19 +2,58 @@ import React, { useEffect, useState } from "react";
 import { EditWrapper } from "./Edit.styled";
 import TopbarUser from "../../../Topbar/TopbarUser";
 import { Volenteer } from "../../../../service/Volenteer";
+import { useLocation } from "react-router-dom";
+import { Toast } from "../../../../service/Toast";
 const EditPage = () => {
-const [formdata,setFormData]=useState({address:"",city:"",email:"",telephone:""})
-const handleFormData=(e)=>{
-const name=e.target.name;
-const value=e.target.value;
-setFormData({...formdata,[name]:value})
-console.log({[name]:value})
-}
-const showRecord=(e)=>{
-  e.preventDefault()
-  console.log(formdata)
-}
+  const [addressStreet, setAddressStreet] = useState("");
+  const [addressCity, setAddressCity] = useState("");
+  const [emailAddress, setEmailAddress] = useState("");
+  const [telePhone, setTelePhone] = useState("");
 
+  const [id, setId] = useState("");
+  const data = { addressCity, addressStreet, emailAddress, telePhone };
+  const showRecord = (e) => {
+    e.preventDefault();
+
+    (async () => {
+      console.log(id);
+      Volenteer.editVolenteer(id, data).then((res) => {
+          if (res) {
+            setAddressCity("");
+            setAddressStreet("");
+            setEmailAddress("");
+            setTelePhone("");
+           
+            Toast.fire("success", "Volenteer Edited");
+          }
+
+          console.log(res);
+        })
+        .catch((err) => console.log(err));
+    })();
+  };
+
+  let location = useLocation();
+  const fullName = new URLSearchParams(location.search).get("fullName");
+
+  useEffect(() => {
+    if (fullName) {
+      (async () => {
+        Volenteer.getByVolenteerName(fullName)
+          .then((res) => {
+            const data = res.data.users[0];
+            console.log(data);
+            setId(data._id);
+            setAddressCity(data.addressCity);
+            setAddressStreet(data.addressStreet);
+            setEmailAddress(data.emailAddress);
+            setTelePhone(data.telePhone);
+           
+          })
+          .catch((err) => console.log(err));
+      })();
+    }
+  }, []);
 
   return (
     <EditWrapper>
@@ -22,11 +61,7 @@ const showRecord=(e)=>{
         <div className=" clearfix mt-0 mb-5">
           <span class=" float-left col-6">
             {" "}
-            <h4>
-              Edit{" "}
-              Volenteer
-            </h4>
-           
+            <h4>Edit Volenteer</h4>
           </span>
           <span className="text-right">
             {" "}
@@ -36,7 +71,7 @@ const showRecord=(e)=>{
         <div className="row"></div>
         <div className="row ">
           <div className="col-12">
-            <h5 className="ml-4">Edit Benjamin Bueno</h5>
+            <h5 className="ml-4">Edit {fullName}</h5>
           </div>
           <div className="row ml-4 ">
             <div
@@ -44,9 +79,8 @@ const showRecord=(e)=>{
               style={{ display: "flex", flexDirection: "row" }}
             >
               <p className="text-primary p-1" style={{ fontSize: ".8rem" }}>
-                <u>Edit someone else ?
-</u>
-                              </p>
+                <u>Edit someone else ?</u>
+              </p>
               <div class="search form-control-sm">
                 <input
                   type="text"
@@ -66,145 +100,71 @@ const showRecord=(e)=>{
         <div className="row">
           <div className="col-lg-3">
             <form className="ml-4 " onSubmit={showRecord}>
-              {/* <div class="form-group">
-                <label for="exampleInputEmail1">
-                  <b>Gender</b>
-                  <span className="star text-danger">*</span>
-                </label>
-                <div className="border border-4 p-2 bgColForm">
-                  <div class="form-check-inline">
-                    <label class="form-check-label">
-                      <input
-                        type="radio"
-                        class="form-check-input"
-                        name="gender"
-                        value={(formdata.gender = "male")}
-                        onChange={handleFormData}
-                      />
-                      Male
-                    </label>
-                  </div>
-                  <div class="form-check-inline">
-                    <label class="form-check-label">
-                      <input
-                        type="radio"
-                        class="form-check-input"
-                        name="gender"
-                        value={(formdata.gender = "female")}
-                        onChange={handleFormData}
-                      />
-                      Female
-                    </label>
-                  </div>
-                </div>
-              </div> */}
-              {/* <div class="form-group">
-                <label for="exampleInputEmail1">
-                  <b>Selct Age</b>
-                  <span className="star text-danger">*</span>
-                </label>
-
-                <select
-                  class="form-control bg-transparent bgColForm"
-                  id="exampleFormControlSelect1"
-                  value={formdata.age}
-                  onChange={handleFormData}
-                  name="age"
-                >
-                  <option>78 years old</option>
-                  <option>79 years old</option>
-                  <option>80 years old</option>
-                  <option>81 years old</option>
-                  <option>82 years old</option>
-                </select>
-              </div> */}
-              <div class="form-group">
-                <label for="exampleInputEmail1">
-                  <b>Address</b>
+            <div className="form-group">
+                <label for="exampleInputEmail1" className="labels">
+                  Address
                 </label>
                 <input
                   type="text"
-                  class="form-control bg-transparent bgColForm"
-                  id=""
+                  className="form-control bg-transparent bgColForm"
+                  id="addressStreet"
                   aria-describedby=""
                   placeholder="22 Smilansky "
-                  name="address"
-                  value={formdata.address}
-                  onChange={handleFormData}
+                  name="addressStreet"
+                  value={addressStreet}
+                  onChange={(e)=>{setAddressStreet(e.target.value)}}
                 />
               </div>
-              <div class="form-group">
-                <label for="exampleInputEmail1">
-                  <b>City</b>
+              <div className="form-group">
+                <label for="exampleInputEmail1" className="labels">
+                  City
                 </label>
                 <input
                   type="text"
-                  class="form-control bg-transparent bgColForm"
-                  id=""
+                  className="form-control bg-transparent bgColForm"
+                  id="city"
                   aria-describedby=""
                   placeholder="Netanya"
-                  name="city"
-                  value={formdata.city}
-                  onChange={handleFormData}
+                  name="addressCity"
+                  value={addressCity}
+                  onChange={(e)=>{setAddressCity(e.target.value)}}
                 />
               </div>
-              <div class="form-group">
-                <label for="exampleInputEmail1">
-                  <b>Email</b>
+              <div className="form-group">
+                <label for="exampleInputEmail1" className="labels">
+                  Email
                 </label>
                 <input
                   type="email"
-                  class="form-control bg-transparent bgColForm"
-                  id=""
+                  className="form-control bg-transparent bgColForm"
+                  id="email"
                   aria-describedby=""
                   placeholder="ELSA@MAMAN.COM"
-                  name="email"
-                  value={formdata.email}
-                  onChange={handleFormData}
+                  name="emailAddress"
+                  value={emailAddress}
+                  onChange={(e)=>{setEmailAddress(e.target.value)}}
                 />
               </div>
-              <div class="form-group">
-                <label for="exampleInputEmail1">
-                  <b>Telephone</b>
+              <div className="form-group">
+                <label for="exampleInputEmail1" className="labels">
+                  Telephone
                 </label>
                 <input
                   type="text"
-                  class="form-control bg-transparent bgColForm"
-                  id=""
+                  className="form-control bg-transparent bgColForm"
+                  id="telephone"
                   aria-describedby=""
                   placeholder="05 44 55 44 44"
-                  name="telephone"
-                  value={formdata.telephone}
-                  onChange={handleFormData}
+                  name="telePhone"
+                  value={telePhone}
+                  onChange={(e)=>{setTelePhone(e.target.value)}}
                 />
               </div>
 
-              {/* <div class="form-check">
-                <input
-                  class="form-check-input"
-                  type="radio"
-                  name="Supply"
-                  id="exampleRadios1"
-                />
-                <label class="form-check-label" for="exampleRadios1">
-                  <b>This senior need medical supply</b>
-                </label>
-              </div>
-              <div class="form-check">
-                <input
-                  class="form-check-input"
-                  type="radio"
-                  name="Supply"
-                  id="exampleRadios2"
-                />
-                <label class="form-check-label" for="exampleRadios2">
-                  <b>This senior need food supply</b>
-                </label>
-              </div> */}
               <div className="text-center mt-4 pt-5">
-              <button type="submit" class="btn btn-primary mt-2 ">
-               Save this volenteer
-              </button>
+                <button type="submit" class="btn btn-primary mt-2 ">
+                  Save this volenteer
+                </button>
               </div>
             </form>
           </div>

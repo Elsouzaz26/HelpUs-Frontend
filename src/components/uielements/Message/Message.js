@@ -1,22 +1,28 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import MessagePageWrapper from "./Message.styled";
 import Frame from "../../../assets/images/Frame.png"
+import { useDispatch, useSelector } from "react-redux";
 import rootReducer from "../../../redux";
 import { configureStore } from "@reduxjs/toolkit";
-
-
+import { userSelector } from "../../../redux/user";
+import { Messages } from "../../../service/Message";
 export default function Message({message}) {
 
   
-  const store = configureStore({ reducer: rootReducer });
-  const {users: {user}} =store.getState();
+  // const store = configureStore({ reducer: rootReducer });
+  // const {users: {user}} =store.getState();
+//  const user={id:1}
 
+const {user}=useSelector(userSelector);
+console.log("user",user)
+
+console.log(message)
 
   return (
     <MessagePageWrapper>
       <div className="row">
         {
-          user && message && (user.id == message.id ) ? 
+          user && message && (user._id === message.id ) ? 
 
           // me in chat
           <div className="col-xl-6 col-lg-12 offset-xl-6 mb-3">

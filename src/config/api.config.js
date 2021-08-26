@@ -1,13 +1,13 @@
 import axios from "axios";
 import siteConfig from "./site.config";
-
+import { Auth } from "../service/Auth";
 const token = localStorage.getItem("token");
 
 
 export const instance = axios.create({
   baseURL: siteConfig.apiUrl,
   headers: {
-    Authorization: `Bearer ${null}`,
+    Authorization: `Bearer ${token}`,
     "Content-Type": "application/json",
   },
 });
@@ -19,3 +19,17 @@ export function setAuthorizationToken(token) {
     delete axios.defaults.headers.common["Authorization"];
   }
 }
+
+
+instance.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error) => {
+    if (error.status === 401) {
+      Auth.logout();
+    }
+
+    return Promise.reject(error.response);
+  }
+);

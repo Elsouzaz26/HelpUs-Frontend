@@ -2,17 +2,6 @@ import axios from "axios";
 import {Auth} from "./Auth"
 import { instance } from "../config/api.config";
 
-instance.interceptors.response.use(
-  (response) => {
-    return response;
-  },
-  (error) => {
-    if (error.status === 401) {
-      Auth.logout();
-    }
-  }
-);
-
 export const User = {
   
   async getUser() {
