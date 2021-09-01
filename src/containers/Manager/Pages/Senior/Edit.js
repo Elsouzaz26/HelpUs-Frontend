@@ -5,6 +5,8 @@ import { useEffect } from "react";
 import { useLocation, useParams } from "react-router";
 import { Senior } from "../../../../service/Senior";
 import { Toast } from "../../../../service/Toast";
+import { useHistory } from "react-router-dom";
+import Autocomplete from "react-google-autocomplete";
 
 const EditPage = () => {
 //   const [formdata, setFormData] = useState(
@@ -34,7 +36,11 @@ const[telePhone,setTelePhone]=useState("")
 const[needsMedicalSupply,setNeedsMedicalSupply]=useState()
 const[needsFoodSupply,setNeedsFoodSupply]=useState()
 const[id,setId]=useState("")
+const [lat, setLat] = useState();
+  const [lng, setLng] = useState();
+const history  = useHistory()
 const data={addressCity,addressStreet,emailAddress,telePhone,needsFoodSupply,needsMedicalSupply}
+
   const showRecord = (e) => {
     e.preventDefault();
     
@@ -43,14 +49,8 @@ const data={addressCity,addressStreet,emailAddress,telePhone,needsFoodSupply,nee
       console.log(id)
       Senior.editSenior(id,data).then(res => {
         if(res){
-          setAddressCity("");
-            setAddressStreet("");
-            setEmailAddress("");
-            setTelePhone("");
-            setNeedsFoodSupply()
-        setNeedsMedicalSupply()
-      
-           
+         
+           history.push("/manager/senior/view")
           Toast.fire("success","Senior Edited")
         }
           
@@ -70,11 +70,14 @@ const fullName=new URLSearchParams(location.search).get("fullName")
     if(fullName)
     {
     (async() => {
+
       Senior.getBySeniorName(fullName).then(res => {
        
-          const data=res.data.users[0]
+        let data = (res.data.users[0])
+
         console.log(data)
         setId(data._id)
+        
         setAddressCity(data.addressCity)
         setAddressStreet(data.addressStreet)
         setEmailAddress(data.emailAddress)
@@ -107,57 +110,92 @@ const fullName=new URLSearchParams(location.search).get("fullName")
         </div>
         <div className="row ml-1">
           <div
-            className="col-4"
+            className="col-6"
             style={{
               display: "flex",
               flexDirection: "row",
               marginTop: "-50px",
             }}
           >
-            <p className="text-primary" style={{ fontSize: ".8rem" }}>
-              <u>Edit someone else ?</u>
-            </p>
-            <div className="search form-control-sm ml-1 text-white" >
-              <input
-                type="text"
-                name="search"
-                className="round bg-primary border-0 "
-              />
-              <i
-                type="submit"
-                className="corner fa fa-search mt-1 text-white"
-                value=""
-              />
-            </div>
           </div>
         </div>
         <div className="row mb-5 mt-4">
           <div className="col-12">
             <h5 className="ml-4">Edit {fullName}</h5>
           </div>
-          <div className="col-lg-3">
+          <div className="col-lg-6">
             <form className="ml-4 mt-3" onSubmit={showRecord}>
 
               <div className="form-group">
                 <label for="exampleInputEmail1" className="labels">
-                  Address
+                  Address <span className="text-danger">*</span>
                 </label>
-                <input
+                <div>
+                <Autocomplete
+                    style={{
+                      padding: "10px",
+                      fontWeight: "450",
+                      fontSize: "16px",
+                    }}
+                    className="autoInput bg-transparent"
+                    apiKey={"AIzaSyC43U2-wqXxYEk1RBrTLdkYt3aDoOxO4Fw"}
+                    onPlaceSelected={(place) => {
+                      console.log(place);
+                      setAddressStreet(place.address_components[0].long_name);
+                      const latitude = place.geometry.location.lat() + Math.floor(Math.random() * 10)* 0.000001;
+                      const longitude = place.geometry.location.lng() + Math.floor(Math.random() * 10)* 0.000001;
+                      setLat(latitude);
+                      setLng(longitude);
+                    }}
+                    options={{
+                      componentRestrictions: { country: ["us", "ca"] },
+                      fields: ["address_components", "geometry"],
+                      types: ["address"],
+                    }}
+                    name="addressStreet"
+                    id="addressStreet"
+                   defaultValue={addressStreet}
+                  />
+                </div>
+                {/* <input
                   type="text"
                   className="form-control bg-transparent bgColForm"
                   id="addressStreet"
                   aria-describedby=""
-                  placeholder="22 Smilansky "
+                  placeholder="Elsa Maman "
                   name="addressStreet"
                   value={addressStreet}
                   onChange={(e)=>{setAddressStreet(e.target.value)}}
-                />
+                /> */}
               </div>
               <div className="form-group">
                 <label for="exampleInputEmail1" className="labels">
-                  City
+                  City <span className="text-danger">*</span>
                 </label>
-                <input
+                <div>
+                  <Autocomplete
+                    style={{
+                      padding: "10px",
+                      fontWeight: "450",
+                      fontSize: "16px",
+                    }}
+                    placeholder="Enter AddressCity"
+                    className="autoInput bg-transparent"
+                    apiKey={"AIzaSyC43U2-wqXxYEk1RBrTLdkYt3aDoOxO4Fw"}
+                    onPlaceSelected={(place) => {
+                      setAddressCity(place.formatted_address);
+                      console.log(place);
+                   
+                    }}
+                    options={{
+                      types: ["(cities)"],
+                    }}
+                    name="addressCity"
+                    id="addressCity"
+                    defaultValue={addressCity}
+                  />
+                </div>
+                {/* <input
                   type="text"
                   className="form-control bg-transparent bgColForm"
                   id="city"
@@ -166,11 +204,11 @@ const fullName=new URLSearchParams(location.search).get("fullName")
                   name="addressCity"
                   value={addressCity}
                   onChange={(e)=>{setAddressCity(e.target.value)}}
-                />
+                /> */}
               </div>
               <div className="form-group">
                 <label for="exampleInputEmail1" className="labels">
-                  Email
+                  Email <span className="text-danger">*</span>
                 </label>
                 <input
                   type="email"
@@ -185,7 +223,7 @@ const fullName=new URLSearchParams(location.search).get("fullName")
               </div>
               <div className="form-group">
                 <label for="exampleInputEmail1" className="labels">
-                  Telephone
+                  Telephone <span className="text-danger">*</span>
                 </label>
                 <input
                   type="text"
@@ -198,17 +236,18 @@ const fullName=new URLSearchParams(location.search).get("fullName")
                   onChange={(e)=>{setTelePhone(e.target.value)}}
                 />
               </div>
+  
 
               <div className="form-check">
                 <input
                   className="form-check-input"
-                  type="radio"
+                  type="checkbox"
                   id="needsMedicalSupply"
                   
                   name="needsMedicalSupply"
                   value={true}
-                  checked={needsMedicalSupply === "true"}
-                  onChange={(e)=>{setNeedsMedicalSupply(e.target.value)}}
+                  checked={needsMedicalSupply}
+                  onChange={(e)=>{setNeedsMedicalSupply(e.target.checked)}}
                 />
                 <label className="form-check-label " for="needsMedicalSupply">
                   This senior need medical supply
@@ -217,13 +256,13 @@ const fullName=new URLSearchParams(location.search).get("fullName")
               <div className="form-check">
                 <input
                   className="form-check-input"
-                  type="radio"
+                  type="checkbox"
                   id="needsFoodSupply"
                   
                   name="needsFoodSupply"
                   value={true}
-                  checked={needsFoodSupply === "true"}
-                  onChange={(e)=>{setNeedsFoodSupply(e.target.value)}}
+                  checked={needsFoodSupply}
+                  onChange={(e)=>{setNeedsFoodSupply(e.target.checked)}}
                 />
                 <label className="form-check-label " for="needsFoodSupply">
                   This senior need food supply

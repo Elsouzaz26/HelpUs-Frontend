@@ -8,8 +8,8 @@ export default {
   footerText: `HelpUs @ ${new Date().getFullYear()} Created Help us, Inc`,
   enableAnimatedRoute: false,
   // Remote server:
-  // apiUrl: "https://machine.mbkcontrols.com/api/",
-  // socketUrl: "https://machine.mbkcontrols.com/",
+  // apiUrl: "https://helpus-elsa.herokuapp.com",
+  // socketUrl: "https://helpus-elsa.herokuapp.com",
   // Local Dev
   apiUrl: "http://localhost:8000",
   socketUrl: "http://localhost:8000",

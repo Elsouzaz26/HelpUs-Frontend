@@ -12,7 +12,7 @@ import TableSortLabel from "@material-ui/core/TableSortLabel";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
-import userpic from "../../../../assets/images/User.png";
+import userpic from "../../../../assets/images/male-avatar.png";
 import { MoreOutlinedBlack, Sort, Filter } from "../../../../assets/Icons";
 import TopbarUser from "../../../Topbar/TopbarUser";
 import { Popover } from "antd";
@@ -21,6 +21,7 @@ import { useHistory } from 'react-router-dom';
 import { Senior } from "../../../../service/Senior";
 import { useState,useEffect } from "react";
 import moment from "moment"
+import { Distributions } from "../../../../service/Distributions";
 
 function createData(name, city, date, groupassigned) {
   return { name, city, date, groupassigned };
@@ -63,7 +64,7 @@ function stableSort(array, comparator) {
 }
 
 const headCells = [
-  { id: "name", numeric: false, disablePadding: false, label: "Name" },
+  { id: "name", numeric: false, disablePadding: false, label: "Name of the distribution" },
   { id: "city", numeric: false, disablePadding: false, label: "City" },
   { id: "date", numeric: false, disablePadding: false, label: "Date" },
   {
@@ -189,14 +190,15 @@ export default function EnhancedTable() {
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(8);
-  const [users,setUsers]=useState([])
+  const [rowsPerPage, setRowsPerPage] = React.useState(25);
+  const [distributions,setDistributions]=useState([])
   useEffect(()=>{
 
     (async() => {
-      Senior.getSenior().then(res => {
+      
+      Distributions.getDistributions().then(res => {
         console.log(res)
-        setUsers(res.data.users)
+        setDistributions(res.data)
       })
       .catch(err=> console.log(err))
     })();
@@ -219,11 +221,11 @@ export default function EnhancedTable() {
     setPage(0);
   };
 
-  const gotoAddSenior = (event) => {
-    history.push('/manager/senior/add');
+  const gotoAddDistribution = (event) => {
+    history.push('/manager/distribution/add');
   }
-  const gotoEditSenior = (event) => {
-    history.push('/manager/senior/edit');
+  const gotoEditDistribution = (event) => {
+    history.push('/manager/distribution/edit');
   }
   const emptyRows =
     rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
@@ -236,15 +238,18 @@ export default function EnhancedTable() {
           {" "}
           <h4>
             Distribution View{" "}
-            <a class="btn badge badge-pill badge-primary ml-md-5" onClick={gotoAddSenior}>Add New distribution</a>
+           
+            <a class="btn badge badge-pill badge-primary ml-md-5" onClick={gotoAddDistribution}>Add New distribution</a>
+            <h6 className="">Group parents</h6>
           </h4>{" "}
         </span>
         <span className="text-right">
           {" "}
           <TopbarUser />
         </span>
-        <div className="row  marginrs"><div className="col"><h5 className="ml-md-3">Group parents</h5></div></div>
+      
       </div>
+     
       <Paper className={classes.paper}>
         <EnhancedTableToolbar numSelected={selected.length} />
         <TableContainer className="mt-4">
@@ -263,20 +268,15 @@ export default function EnhancedTable() {
               rowCount={rows.length}
             />
        <TableBody>
-              {stableSort(users, getComparator(order, orderBy))
+              {distributions
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((users, index) => {
+                .map((d, index) => {
                   return (
                     <TableRow
                       hover
                       role="checkbox"
                       tabIndex={-1}
-                      key={users.id}
-                      onClick={(e)=>{   history.push({
-                        pathname: `/manager/senior/edit`,
-                        search: `?fullName=${users.fullName}`
-                       
-                    })}}
+                      key={d._id}
                     >
                       <TableCell component="th" scope="row">
                      
@@ -298,8 +298,8 @@ export default function EnhancedTable() {
                             <span
                               className="align"
                             >
-                              <span className="rname">{users.fullName}</span>
-                              <a className="undertext" > Updated {moment(users.updatedAt).fromNow()}</a>{" "}
+                              <span className="rname">Distribution {d._id}</span>
+                              <a className="undertext" > Updated {moment(d.date).format("MMMM D,YYYY")}</a>{" "}
                             </span>
                           </div>
                         </div>
@@ -309,29 +309,28 @@ export default function EnhancedTable() {
                         className="align"
                      
                       >
-                        <span className="rname">{users.addressCity}</span>
-                        <span className=""> <a  className="undertext">on {moment(users.createdAt).format("D.MM.YYYY")}</a></span>
+                        <span className="rname">{d.city}</span>
+                        <span className=""> <a  className="undertext">on {moment(d.createdAt).format("D.MM.YYYY")}</a></span>
                        
                       </TableCell>
                       <TableCell align="left">
                         <div
                            className="align"
                         >
-                          <span className="rname">{moment(users.createdAt).format("MMMM D,YYYY")}</span>
-                          <a  className="undertext  ">{moment(users.createdAt).format("h:mm a")}</a>
+                          <span className="rname">{moment(d.date).format("MMMM D,YYYY")}</span>
                         </div>
                       </TableCell>
                       <TableCell align="left" width={300}>
-                        {users.needMedicalSupply === "true" ? (
+                        {d.status === "Done" ? (
                           <span class="lead">
                             <span class="badge badge-pill badge-success">
-                              Done
+                              {d.status}
                             </span>
                           </span>
                         ) : (
                           <span class="lead">
                             <span class="badge badge-pill badge-danger">
-                              To do
+                              {d.status}
                             </span>
                           </span>
                         )}

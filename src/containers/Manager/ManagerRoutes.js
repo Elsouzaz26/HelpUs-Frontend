@@ -13,23 +13,23 @@ const routes = [
     exact: true,
   },
   {
-    path: `volenteer/view`,
+    path: `volunteer/view`,
     component: lazy(() =>
-      import("./Pages/Volenteer/View")
+      import("./Pages/Volunteer/View")
     ),
     exact: true,
   },
   {
-    path: `volenteer/edit`,
+    path: `volunteer/edit`,
     component: lazy(() =>
-      import("./Pages/Volenteer/Edit")
+      import("./Pages/Volunteer/Edit")
     ),
     exact: true,
   },
   {
-    path: `volenteer/add`,
+    path: `volunteer/add`,
     component: lazy(() =>
-      import("./Pages/Volenteer/Add")
+      import("./Pages/Volunteer/Add")
     ),
     exact: true,
   },
@@ -77,9 +77,30 @@ const routes = [
     exact: true,
   },
   {
+    path: `groups/todo`,
+    component: lazy(() =>
+      import("./Pages/Groups/Todo")
+    ),
+    exact: true,
+  },
+  {
     path: `distribution/view`,
     component: lazy(() =>
       import("./Pages/Distribution/View")
+    ),
+    exact: true, 
+  },
+  {
+    path: `distribution/edit`,
+    component: lazy(() =>
+      import("./Pages/Distribution/Edit")
+    ),
+    exact: true, 
+  },
+  {
+    path: `distribution/add`,
+    component: lazy(() =>
+      import("./Pages/Distribution/Add")
     ),
     exact: true, 
   },
@@ -90,7 +111,20 @@ const routes = [
     ),
     exact: true, 
   },
-  
+  {
+    path: `stats`,
+    component: lazy(() =>
+      import("./Pages/Manager/Stats")
+    ),
+    exact: true, 
+  },
+  {
+    path: `blog`,
+    component: lazy(() =>
+      import("./Pages/Manager/Notebook")
+    ),
+    exact: true, 
+  },
 ];
 
 export default function AppRouter() {

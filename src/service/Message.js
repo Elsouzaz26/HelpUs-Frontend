@@ -5,9 +5,9 @@ import { instance } from "../config/api.config";
 
 export const Messages = {
   
-  async getMessage(id) {
+  async getMessage(id, skip) {
    
-    return await instance.get(`/getmessages/${id}`)
+    return await instance.get(`/getmessages/${id}/${skip}`)
      
   },
 }

@@ -46,10 +46,14 @@ const LoginPage = () => {
 
     if (data.user.role == "manager") {
       dispatch(setUser({ user: data.user }))
-      history.push('/manager-home')
+
+      window.location.href = '/manager-home'
+      
     } else if (data.user.role == "volenteer") {
       dispatch(setUser({ user: data.user }))
-      history.push('/volenteer-home')
+      // history.push('/volenteer-home')
+      window.location.href = '/volenteer-home'
+
     }
 
   }

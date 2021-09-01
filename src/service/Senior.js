@@ -41,5 +41,17 @@ export const Senior = {
           })
          
       },
+
+      async getSeniorByCity(city) {
+   
+        return await instance
+          .get(`/userByCity/?city=${city}&role=senior`).then(res=>{
+            console.log("response",res)
+            return res
+          })
+         
+      },
+
+      
   
 };

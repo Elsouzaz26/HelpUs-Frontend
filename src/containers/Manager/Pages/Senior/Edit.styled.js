@@ -10,6 +10,21 @@ const EditWrapper=styled.div`
 font-size: 14px;
 color: #373A3C!important
 }
+.autoInput {
+  width:100%;
+  height:2.3rem;
+  border: 1px solid rgba(204, 204, 204, 1);
+  border-radius: 2rem!important
+  padding:10px!important
+  background:transparent!important
+}
+
+.autoInput:focus {
+  outline: none;
+  border: 1px solid rgba(204, 204, 204, 1);
+  background: white!important;
+  box-shadow: 0 0 0 3px #a3ccfa;
+}
 
 
 

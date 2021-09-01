@@ -6,22 +6,24 @@ import { Toast } from "../../../../service/Toast";
 import Autocomplete from "react-google-autocomplete";
 import { Senior } from "../../../../service/Senior";
 import img1 from "../../../../assets/images/Login.png";
+import { useHistory } from "react-router-dom";
 const AddPage = () => {
   const [gender, setGender] = useState("");
   const [age, setAge] = useState("");
   const [fullName, setFullName] = useState("");
-  const [addressStreet, setAddressStreet] = useState("canada");
+  const [addressStreet, setAddressStreet] = useState("");
   const [addressCity, setAddressCity] = useState("");
   const [emailAddress, setEmailAddress] = useState("");
   const [telePhone, setTelePhone] = useState("");
-  const [password, setPassword] = useState("");
-  const [role,setRole] = useState("senior");
-  const [groupAdded,setGroupAdded  ]= useState(false)
-  const [needsMedicalSupply, setNeedsMedicalSupply] = useState(false);
-  const [needsFoodSupply, setNeedsFoodSupply] = useState(false);
+  const [password, setPassword] = useState("Senior@123");
+  const [role, setRole] = useState("senior");
+  const [groupAdded, setGroupAdded] = useState(false);
+  const [needsMedicalSupply, setNeedsMedicalSupply] = useState();
+  const [needsFoodSupply, setNeedsFoodSupply] = useState();
   const [lat, setLat] = useState();
   const [lng, setLng] = useState();
-const [img,setImg]=useState("")
+  const [img, setImg] = useState("");
+  const history = useHistory();
   const showRecord = (e) => {
     e.preventDefault();
     const data = {
@@ -39,35 +41,38 @@ const [img,setImg]=useState("")
       needsFoodSupply,
       lat,
       lng,
-      img
+      img,
     };
     console.log(data);
+
+    if (
+      age == "" ||
+      fullName == "" ||
+      addressStreet == "" ||
+      emailAddress == "" ||
+      telePhone == "" ||
+      password == ""
+    ) {
+      Toast.fire("error", "Please eneter all fields");
+
+      return;
+    }
 
     (async () => {
       Senior.addSenior(data)
         .then((res) => {
           if (res) {
-            setAge("")
-            setEmailAddress("")
-            setFullName("")
-            setTelePhone("")
-            setPassword("")
-            setNeedsFoodSupply("")
-            setNeedsMedicalSupply("")
-            setAddressCity("")
-            setAddressStreet("")
-            setGender("")
             Toast.fire("success", "Senior Added");
+            history.push("/manager/senior/view");
           }
 
           console.log(res);
         })
         .catch((err) => {
-          if (err){
-            Toast.fire("error",`${err.data.msg}`)
+          if (err) {
+            Toast.fire("error", `${err.data.msg}`);
           }
-    });
-        
+        });
     })();
   };
 
@@ -86,15 +91,29 @@ const [img,setImg]=useState("")
         </div>
         <div className="row"></div>
         <div className="row mb-5">
-          <div className="col-6">
+          <div className="col-md-6">
             <form className="" onSubmit={showRecord}>
-              <div class="form-group w-75">
+              <div class="form-group ">
                 <label className="labels">
                   Select Age
                   <span className="star text-danger">*</span>
                 </label>
+                <div>
+                  <input
+                    className="autoInput p-3 w-75 bg-transparent"
+                    type="number"
+                    min="18"
+                    max="5000"
+                    step="1"
+                    value={age}
+                    name="age"
+                    onChange={(e) => {
+                      setAge(e.target.value);
+                    }}
+                  />
+                </div>
 
-                <select
+                {/* <select
                   class="form-control bg-transparent bgColForm"
                   id="exampleFormControlSelect1"
                   value={age}
@@ -103,17 +122,18 @@ const [img,setImg]=useState("")
                     setAge(e.target.value);
                   }}
                 >
+                  <option value="">Choose Age</option>
                   <option>78 years old</option>
                   <option>79 years old</option>
                   <option>80 years old</option>
                   <option>81 years old</option>
                   <option>82 years old</option>
                   <option>22 years old</option>
-                </select>
+                </select> */}
               </div>
               <div class="form-group">
                 <label for="" className="labels">
-                  Email address
+                  Email address <span className="text-danger">*</span>
                 </label>
                 <input
                   type="email"
@@ -133,7 +153,7 @@ const [img,setImg]=useState("")
               </div>
               <div class="form-group">
                 <label for="" className="labels">
-                  Telephone
+                  Telephone <span className="text-danger">*</span>
                 </label>
                 <input
                   type="text"
@@ -150,7 +170,7 @@ const [img,setImg]=useState("")
               </div>
               <div class="form-group">
                 <label for="" className="labels">
-                  Name & Surname
+                  Name & Surname <span className="text-danger">*</span>
                 </label>
                 <input
                   type="text"
@@ -162,11 +182,11 @@ const [img,setImg]=useState("")
                   }}
                   name="fullName"
                   vlaue={fullName}
-                  placeholder="John Doe"
+                  placeholder="Elsa Maman "
                 />
               </div>
               <label class="my-1 mr-2 labels" for="gender">
-                Gender
+                Gender <span className="text-danger">*</span>
               </label>
               <select
                 class="custom-select my-1 mr-sm-2"
@@ -185,7 +205,7 @@ const [img,setImg]=useState("")
 
               <div class="form-group">
                 <label for="" className="labels">
-                  Address street
+                  Address street <span className="text-danger">*</span>
                 </label>
                 <div>
                   <Autocomplete
@@ -198,14 +218,24 @@ const [img,setImg]=useState("")
                     apiKey={"AIzaSyC43U2-wqXxYEk1RBrTLdkYt3aDoOxO4Fw"}
                     onPlaceSelected={(place) => {
                       console.log(place);
-                      setAddressCity(place.formatted_address);
-                     
+                      setAddressStreet(place.address_components[0].long_name);
+                      const latitude =
+                        place.geometry.location.lat() +
+                        Math.floor(Math.random() * 10) * 0.000001;
+                      const longitude =
+                        place.geometry.location.lng() +
+                        Math.floor(Math.random() * 10) * 0.000001;
+                      setLat(latitude);
+                      setLng(longitude);
                     }}
                     options={{
-                      types: ["(regions)"],
+                      componentRestrictions: { country: ["us", "ca"] },
+                      fields: ["address_components", "geometry"],
+                      types: ["address"],
                     }}
                     name="addressStreet"
                     id="addressStreet"
+                    placeholder="street address"
                   />
                 </div>
                 {/* <input
@@ -215,13 +245,16 @@ const [img,setImg]=useState("")
                   aria-describedby=""
                   name="addressStreet"
                   value={addressStreet}
-                  placeholder="22 Smilansky"
+                  onChange={(e) => {
+                    setAddressStreet(e.target.value);
+                  }}
+                  placeholder="Street Address"
                 /> */}
               </div>
 
               <div class="form-group">
                 <label for="" className="labels">
-                  City
+                  City <span className="text-danger">*</span>
                 </label>
                 <div>
                   <Autocomplete
@@ -230,16 +263,12 @@ const [img,setImg]=useState("")
                       fontWeight: "450",
                       fontSize: "16px",
                     }}
-                    placeholder="Enter AddressCity"
+                    placeholder="Enter city"
                     className="autoInput"
                     apiKey={"AIzaSyC43U2-wqXxYEk1RBrTLdkYt3aDoOxO4Fw"}
                     onPlaceSelected={(place) => {
                       setAddressCity(place.formatted_address);
                       console.log(place);
-                      const latitude = place.geometry.location.lat();
-                      const longitude = place.geometry.location.lng();
-                      setLat(latitude);
-                      setLng(longitude);
                     }}
                     options={{
                       types: ["(cities)"],
@@ -259,16 +288,15 @@ const [img,setImg]=useState("")
                   placeholder=""
                 /> */}
               </div>
-              <div className="form-group">
+              {/* <div className="form-group">
                 <label for="pwd" className="labels">
-                  Password
+                  Password <span className="text-danger">*</span>
                 </label>
                 <input
                   type="password"
                   className="form-control"
                   id="pwd"
                   placeholder="Enter password"
-                  required
                   onChange={(e) => {
                     setPassword(e.target.value);
                   }}
@@ -279,37 +307,34 @@ const [img,setImg]=useState("")
                 <small id="pwd" className="form-text text-muted">
                   You will be able to login
                 </small>
-              </div>
-
-              <div class="form-check">
+              </div> */}
+              <div className="form-check">
                 <input
-                  class="form-check-input"
-                  type="radio"
+                  className="form-check-input"
+                  type="checkbox"
                   id="needsMedicalSupply"
-                  onChange={(e) => {
-                    setNeedsMedicalSupply(e.target.value);
-                  }}
+                  
                   name="needsMedicalSupply"
                   value={true}
-                  checked={needsMedicalSupply === "true"}
+                  checked={needsMedicalSupply}
+                  onChange={(e)=>{setNeedsMedicalSupply(e.target.checked)}}
                 />
-                <label class="form-check-label labels" for="needsMedicalSupply">
+                <label className="form-check-label " for="needsMedicalSupply">
                   This senior need medical supply
                 </label>
               </div>
-              <div class="form-check">
+              <div className="form-check">
                 <input
-                  class="form-check-input"
-                  type="radio"
+                  className="form-check-input"
+                  type="checkbox"
                   id="needsFoodSupply"
+                  
                   name="needsFoodSupply"
                   value={true}
-                  checked={needsFoodSupply === "true"}
-                  onChange={(e) => {
-                    setNeedsFoodSupply(e.target.value);
-                  }}
+                  checked={needsFoodSupply}
+                  onChange={(e)=>{setNeedsFoodSupply(e.target.checked)}}
                 />
-                <label class="form-check-label labels" for="needsFoodSupply">
+                <label className="form-check-label " for="needsFoodSupply">
                   This senior need food supply
                 </label>
               </div>

@@ -3,9 +3,20 @@ import { palette } from "styled-theme";
 
 const ViewWrapper = styled.div`
 
+  .overflow-hide div{
+    overflow-x: hidden
+  }
+
+  
   .paper {
     width: 100%;
     border-radius : 18px !important
+  }
+
+  .flex-item {
+    display: flex;
+    align-items: center;
+    flex-direction: inherit
   }
 
   .border-right {

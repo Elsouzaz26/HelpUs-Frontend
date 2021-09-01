@@ -11,7 +11,12 @@
         max-width: 65% !important;
     }
 }
-
+.react-scroll-to-bottom--css-qatxj-1n7m0yu {
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    width: 100%;
+}
 
 @media (min-width: 1550px) {
 

@@ -1,24 +1,27 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import VolenteerHomepageWrapper from "./HomePage.styles";
 import TopbarUser from "../../Topbar/TopbarUser";
 import Helpus from "../../../assets/images/Helpus.png";
 import volenhome from "../../../assets/images/volenhome.png";
 import { useHistory } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { userSelector } from "../../../redux/user";
 
 
 const VolenteerHomePage = () => {
 
 const history = useHistory();
-const [volenteerName, setVolenteerName] = useState('');
+const {user} = useSelector(userSelector)
+
 
 const viewAllAssignedGroups = (event) => {
-  
+  history.push("/volenteer/assignedgroups/view")
 }
 const viewBlogs = (event) => {
-
+    history.push("/volenteer/notebook")
 }
-const chatWithManager = (event) => {
-
+const chatWithManager = () => {
+history.push("/volenteer/chat")
 }
     return (
         <VolenteerHomepageWrapper>
@@ -37,7 +40,7 @@ const chatWithManager = (event) => {
                 </div>
                 <div className="row">
                     <div className="col-12 text-center">
-                        <h2>WELCOME {volenteerName}</h2>
+                        <h2>WELCOME {user ? user.fullName: ""}</h2>
                     </div>
                 </div>
                 <div className="row">

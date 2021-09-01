@@ -19,9 +19,23 @@ const routes = [
     exact: true,
   },
   {
+    path: `assignedgroups/edit`,
+    component: lazy(() =>
+      import("./Pages/AssignedGroups/Edit")
+    ),
+    exact: true,
+  },
+  {
     path: `chat`,
     component: lazy(() =>
       import("./Pages/Chat/Chat")
+    ),
+    exact: true,
+  },
+  {
+    path: `blog`,
+    component: lazy(() =>
+      import("./Pages/VolenteerNotebook/Notebook")
     ),
     exact: true,
   },

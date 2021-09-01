@@ -12,25 +12,31 @@ import TableSortLabel from "@material-ui/core/TableSortLabel";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
-import userpic from "../../../../assets/images/User.png";
+import userpic from "../../../../assets/images/male-avatar.png";
 import { MoreOutlinedBlack, Sort, Filter } from "../../../../assets/Icons";
 import TopbarUser from "../../../Topbar/TopbarUser";
 import { Popover } from "antd";
 import { ViewWrapper } from "./View.styles"
-import { Link } from "react-router-dom";
+import { useHistory } from 'react-router-dom';
+import { Senior } from "../../../../service/Senior";
+import { useState,useEffect } from "react";
+import moment from "moment"
+import { Groups } from "../../../../service/Groups";
+import user, {userSelector} from "../../../../redux/user";
+import { useSelector } from "react-redux";
 
-function createData(name, volonteerleader, date, status) {
-  return { name, volonteerleader , date, status };
+function createData(name, city, date, groupassigned) {
+  return { name, city, date, groupassigned };
 }
 
 const rows = [
-  createData("Group A", "Tom Cruise", "May 26, 2019", "false"),
-  createData("Group B", "Tom Cruise", "May 26, 2019", "false"),
-  createData("Group C", "Tom Cruise", "May 26, 2019", "true"),
-  createData("Group D", "Tom Cruise", "May 26, 2019", "true"),
-  createData("Group E", "Tom Cruise", "May 26, 2019", "true"),
-  createData("Group F", "Tom Cruise", "May 26, 2019", "true"),
-  createData("Group G", "Tom Cruise", "May 26, 2019", "true"),
+  createData("Elsa Maman", "Raanana", "May 26, 2019", "false"),
+  createData("Elsa Maman", "Raanana", "May 26, 2019", "false"),
+  createData("Elsa Maman", "Raanana", "May 26, 2019", "true"),
+  createData("Elsa Maman", "Raanana", "May 26, 2019", "true"),
+  createData("Elsa Maman", "Raanana", "May 26, 2019", "true"),
+  createData("Elsa Maman", "Raanana", "May 26, 2019", "true"),
+  createData("Elsa Maman", "Raanana", "May 26, 2019", "true"),
 ];
 
 function descendingComparator(a, b, orderBy) {
@@ -60,11 +66,11 @@ function stableSort(array, comparator) {
 }
 
 const headCells = [
-  { id: "name", numeric: false, disablePadding: false, label: "Name of the group" },
-  { id: "volonteer leader", numeric: false, disablePadding: false, label: "Volonteer Leader" },
+  { id: "name", numeric: false, disablePadding: false, label: "Name of the Group" },
+  { id: "city", numeric: false, disablePadding: false, label: "City" },
   { id: "date", numeric: false, disablePadding: false, label: "Date" },
   {
-    id: "status",
+    id: "groupassigned",
     numeric: false,
     disablePadding: false,
     label: "Status",
@@ -101,11 +107,6 @@ function EnhancedTableHead(props) {
               className="text-left"
             >
               {headCell.label}
-              {/* {orderBy === headCell.id ? (
-                <span className={classes.visuallyHidden}>
-                  {order === "desc" ? "sorted descending" : "sorted ascending"}
-                </span>
-              ) : null} */}
             </TableSortLabel>
           </TableCell>
         ))}
@@ -113,16 +114,6 @@ function EnhancedTableHead(props) {
     </TableHead>
   );
 }
-
-// EnhancedTableHead.propTypes = {
-//   classes: PropTypes.object.isRequired,
-//   numSelected: PropTypes.number.isRequired,
-//   onRequestSort: PropTypes.func.isRequired,
-
-//   order: PropTypes.oneOf(['asc', 'desc']).isRequired,
-//   orderBy: PropTypes.string.isRequired,
-//   rowCount: PropTypes.number.isRequired,
-// };
 
 const useToolbarStyles = makeStyles((theme) => ({
   root: {
@@ -157,10 +148,10 @@ const EnhancedTableToolbar = (props) => {
         id="tableTitle"
         component="div"
       >
-        All Groups
+        All Group
       </Typography>
-
-      {/* <a>{Sort}</a>
+{/* 
+      <a>{Sort}</a>
       <span className="p-1">Sort</span>
 
       <a>{Filter}</a>
@@ -195,12 +186,38 @@ const useStyles = makeStyles((theme) => ({
 
 export default function EnhancedTable() {
   const classes = useStyles();
+  const history = useHistory();
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(8);
+  const [group,setGroup]=useState([])
+  const {user} = useSelector(userSelector);
+  useEffect(()=>{
+
+    (async() => {
+      if(user){
+        Groups.getGroups()
+        .then(res => {
+          console.log(res.data)
+          console.log(user._id);
+          const newData = res.data.filter(ob => {
+            return ob.leader == user._id
+          })
+          console.log(newData);
+          setGroup(newData)
+        })
+        .catch(err=> console.log(err))
+      }else {
+        console.log('no user')
+      }
+     
+    })();
+      
+  },[user]);
+
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -217,6 +234,12 @@ export default function EnhancedTable() {
     setPage(0);
   };
 
+  const gotoAddDistribution = (event) => {
+    history.push('/manager/distribution/add');
+  }
+  const gotoEditDistribution = (event) => {
+    history.push('/manager/distribution/edit');
+  }
   const emptyRows =
     rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
@@ -227,15 +250,17 @@ export default function EnhancedTable() {
         <span class=" float-left col-6">
           {" "}
           <h4>
-            Groups{" "}
-            <a class="btn badge badge-pill badge-primary">Add new group</a>
+            Group{" "}
+           
           </h4>{" "}
         </span>
         <span className="text-right">
           {" "}
           <TopbarUser />
         </span>
+      
       </div>
+     
       <Paper className={classes.paper}>
         <EnhancedTableToolbar numSelected={selected.length} />
         <TableContainer className="mt-4">
@@ -253,17 +278,20 @@ export default function EnhancedTable() {
               onRequestSort={handleRequestSort}
               rowCount={rows.length}
             />
-            <TableBody>
-              {stableSort(rows, getComparator(order, orderBy))
+       <TableBody>
+              {group
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => {
+                .map((d, index) => {
                   return (
                     <TableRow
                       hover
                       role="checkbox"
                       tabIndex={-1}
-                      key={row.name}
-                      onClick={()=>alert("for link to edit page")}
+                      key={d._id}
+                      onClick={(e)=>{   history.push({
+                        pathname: '/volenteer/assignedgroups/edit',
+                        search: `?id=${d._id}`
+                    })}}
                     >
                       <TableCell component="th" scope="row">
                      
@@ -285,8 +313,8 @@ export default function EnhancedTable() {
                             <span
                               className="align"
                             >
-                              <span className="rname">{row.name}</span>
-                              <a className="undertext" > Updated 1 day ago</a>{" "}
+                              <span className="rname">{d._id}</span>
+                              <a className="undertext" > Updated {moment(d.date).format("MMMM D,YYYY")}</a>{" "}
                             </span>
                           </div>
                         </div>
@@ -296,29 +324,28 @@ export default function EnhancedTable() {
                         className="align"
                      
                       >
-                        <span className="rname">{row.volonteerleader}</span>
-                        <span className=""> <a  className="undertext">on 24.05.2019</a></span>
+                        <span className="rname">{d.city}</span>
+                        <span className=""> <a  className="undertext">on {moment(d.createdAt).format("D.MM.YYYY")}</a></span>
                        
                       </TableCell>
                       <TableCell align="left">
                         <div
                            className="align"
                         >
-                          <span className="rname">{row.date}</span>
-                          <a  className="undertext  ">6:30 PM</a>
+                          <span className="rname">{moment(d.date).format("MMMM D,YYYY")}</span>
                         </div>
                       </TableCell>
-                      <TableCell align="left">
-                        {row.status === "true" ? (
+                      <TableCell align="left" width={300}>
+                        {d.status === "Done" ? (
                           <span class="lead">
                             <span class="badge badge-pill badge-success">
-                              DONE
+                              {d.status}
                             </span>
                           </span>
                         ) : (
                           <span class="lead">
                             <span class="badge badge-pill badge-danger">
-                              TO DO
+                              {d.status}
                             </span>
                           </span>
                         )}

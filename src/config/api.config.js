@@ -23,13 +23,19 @@ export function setAuthorizationToken(token) {
 
 instance.interceptors.response.use(
   (response) => {
+
+    console.log(response)
     return response;
   },
   (error) => {
-    if (error.status === 401) {
-      Auth.logout();
+
+    console.log(error)
+    if (error.response.status === 401) {
+      // Auth.logout();
     }
 
     return Promise.reject(error.response);
   }
 );
+
+

@@ -16,5 +16,14 @@ export const User = {
         }
       });
   },
+  async setSeniorstatus(id, data) {
+   
+    return await instance
+      .post(`/setseniorstatus`,{id, data}).then(res=>{
+        console.log("response",res)
+        return res
+      })
+  },
+
   
 };

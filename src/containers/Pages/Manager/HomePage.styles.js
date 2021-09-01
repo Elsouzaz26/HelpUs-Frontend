@@ -9,8 +9,8 @@ const HomepageWrapper = styled.div`
     display: block;
     margin-left: auto;
     margin-right: auto;
-    width: 30%;
-    margin-top:-90px
+    width: 25%;
+    margin-top:-15px
   }
 }
 

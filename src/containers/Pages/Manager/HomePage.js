@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import HomepageWrapper from "./HomePage.styles";
 import TopbarUser from "../../Topbar/TopbarUser";
 import bgImage from "../../../assets/images/forgotpassword.png";
-import { BackIcon1 } from "../../../assets/Icons";
+import { BackIcon1, LetterIcon } from "../../../assets/Icons";
 import Helpus from "../../../assets/images/Helpus.png";
 import senior from "../../../assets/images/seniorCard.png";
-import volenteer from "../../../assets/images/volenteerCard.png";
+import volunteer from "../../../assets/images/volunteerCard.png";
 import groups from "../../../assets/images/groupsCard.png";
 import { useHistory } from "react-router-dom";
 
@@ -47,14 +47,23 @@ const addASeniorView = (event) => {
 const editASeniorView = (event) => {
   history.push("/manager/senior/edit");
 }
-const allVolenteerView = (event) => {
-  history.push("/manager/volenteer/view");
+const allVolunteerView = (event) => {
+  history.push("/manager/volunteer/view");
 }
-const addAVolenteerView = (event) => {
-  history.push('/manager/volenteer/add');
+const addAVolunteerView = (event) => {
+  history.push('/manager/volunteer/add');
 }
-const editAVolenteerView = (event) => {
-  history.push("/manager/volenteer/edit");
+const editAVolunteerView = (event) => {
+  history.push("/manager/volunteer/edit");
+}
+const allDistributerView = (event) => {
+  history.push("/manager/distribution/view");
+}
+const addADistributerView = (event) => {
+  history.push('/manager/distribution/add');
+}
+const editADistributerView = (event) => {
+  history.push("/manager/distribution/edit");
 }
 
 
@@ -101,17 +110,17 @@ const editAVolenteerView = (event) => {
           </div>
           <div className="col-md-4">
             <div class="card  " onMouseEnter={bgEnter1} onMouseLeave={bgLeaver1} style={{ background:`${cardColor1}`,height:"35.5rem" }}>
-              <img class="card-img-top" src={volenteer} alt="Card image cap" />
-              <h3 className="text-center">VOLENTEER</h3>
+              <img class="card-img-top" src={volunteer} alt="Card image cap" />
+              <h3 className="text-center">VOLuNTEER</h3>
               <div className="p-2 mt-5">
-                <a onClick={allVolenteerView} class="btn btn-light w-100">
-                  ALL VOLENTEER VIEW
+                <a onClick={allVolunteerView} class="btn btn-light w-100">
+                  ALL VOLUNTEER VIEW
                 </a>
-                <a onClick={addAVolenteerView} class="btn btn-light w-100 mt-2 ">
-                  ADD A VOLENTEER
+                <a onClick={addAVolunteerView} class="btn btn-light w-100 mt-2 ">
+                  ADD A VOLUNTEER
                 </a>
-                <a onClick={editAVolenteerView} class="btn btn-light w-100 mt-2 ">
-                  EDIT A VOLENTEER
+                <a onClick={editAVolunteerView} class="btn btn-light w-100 mt-2 ">
+                  EDIT A VOLUNTEER
                 </a>
               </div>
             </div>
@@ -121,13 +130,13 @@ const editAVolenteerView = (event) => {
               <img class="card-img-top" src={groups} alt="Card image cap" />
               <h3 className="text-center">DISTRIBUTION</h3>
               <div className="p-2 mt-5">
-                <a href="manager/groups/view" class="btn btn-light w-100">
+                <a onClick={allDistributerView} class="btn btn-light w-100">
                   ALL DISTRIBUTION VIEW
                 </a>
-                <a href="manager/groups/add" class="btn btn-light w-100 mt-2 ">
+                <a onClick={addADistributerView} class="btn btn-light w-100 mt-2 ">
                   ADD A DISTRIBUTION
                 </a>
-                <a href="manager/groups/edit" class="btn btn-light w-100 mt-2 ">
+                <a onClick={editADistributerView} class="btn btn-light w-100 mt-2 ">
                   RENEW/EDIT A DISTRIBUTION
                 </a>
               </div>

@@ -3,10 +3,16 @@ import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import Popover from "../../components/uielements/popover";
 import IntlMessages from "../../components/utility/intlMessages";
-import userpic from "../../assets/images/User.png";
+// import userpic from "../../assets/images/User.png";
 import { Auth } from "../../service/Auth";
 import TopbarDropdownWrapper from "./TopbarDropdown.styles";
 import { ArrowDownIcon,Divider } from "../../assets/Icons";
+import { useSelector } from "react-redux";
+import user, { userSelector } from "../../redux/user";
+import { useState } from "react";
+import { useEffect } from "react";
+import Male from "../../assets/images/male-avatar.png"
+import Female from "../../assets/images/female-avatar.png"
 
 // const { logout } = authAction;
 
@@ -15,6 +21,11 @@ export default function TopbarUser() {
   function handleVisibleChange() {
     setVisibility((visible) => !visible);
   }
+  const {user} = useSelector(userSelector)
+
+
+
+  
 
   const content = (
     <TopbarDropdownWrapper className="isoUserDropdown">
@@ -37,21 +48,13 @@ export default function TopbarUser() {
   );
 
   return (
-    <div className=" ">
-      
-        {/* <div className="col-12 mt-2 mr-0">
-              
-                Jones Ferdinand 
-              
-          </div>
-          <div className="col-">
-            <img src={userpic} height="40" width="40" className="rounded-circle" alt="user"/>
-          </div> */}
-        
+    <div className="">
+       
           <div className="row">
             <div className="col-11 ">
               <span className="p-2">{Divider}</span>
-              <span
+              <span 
+              
                 className="float-right"
                 style={{
                   display: "flex",
@@ -60,15 +63,23 @@ export default function TopbarUser() {
                   fontWeight: "600",
                 }}
               >
-                <span>Jones Ferdinand</span>
-                <a className="text-primary mt-0">Not you?</a>{" "}
+                <span>{user ? user.fullName: ""}</span>
+                <span >
+                <a className="text-primary mt-0"  onClick={ 
+                      (e) => {
+                        e.preventDefault()
+                        console.log('ooo')
+                        Auth.logout()
+                      }
+                    }> Not you?</a>{" "}
+                </span>
               </span>
             </div>
             <div className="col-1 p-0">
               <span>
                 <a>
                   <img
-                    src={userpic}
+                    src={(user ? user.gender === "male" ?Male : Female  : Male ) }
                     height="40"
                     width="40"
                     className="rounded-circle border border-5"

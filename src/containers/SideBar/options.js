@@ -7,7 +7,7 @@ import {
   SettingOutlined,
   UnorderedListOutlined,
 } from "@ant-design/icons";
-import { Groups,stat,Volenteer,Notebook,Bell,Senior,Search } from "../../assets/Icons";
+import { Groups,stat,Volenteer,Notebook,Bell,Senior,Search, distributionIcon } from "../../assets/Icons";
 
 const subMenuExample = {
   key: "Manage",
@@ -56,39 +56,21 @@ const subMenuExample = {
 
 
 const options = [
+  
   {
-    key: "",
-    label: "Stats",
-    leftIcon: stat,
-  },
-  {
-    key: "",
+    key: "assignedgroups/view",
     label: "Groups",
     leftIcon: Groups ,
   },
+
   {
-    key: "",
-    label: "Volenteers",
-    leftIcon: Volenteer,
-  },
-  {
-    key: "",
-    label: "Seniors",
-    leftIcon: Senior,
-  },
-  {
-    key: "",
+    key: "blog",
     label: "Articles notebook",
     leftIcon: Notebook,
-  },
+  }, 
   {
-    key: "",
-    label: "Maps view",
-    leftIcon: Search,
-  },
-  {
-    key: "",
-    label: "Chat with manager",
+    key: "chat",
+    label: "Chat with Manager",
     leftIcon: Bell,
   },
   

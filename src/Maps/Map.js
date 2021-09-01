@@ -1,11 +1,13 @@
 import React from "react";
-
+import { MapMarker } from "../assets/Icons";
 import { compose, withProps } from "recompose";
 import {
   withScriptjs,
   withGoogleMap,
   GoogleMap,
-  Marker
+  Marker,
+  Circle,
+  InfoWindow 
 } from "react-google-maps";
 
 const MyMapComponent = compose(
@@ -24,9 +26,20 @@ const MyMapComponent = compose(
   withScriptjs,
   withGoogleMap
 )(props => (
-  <GoogleMap defaultZoom={8} defaultCenter={{ lat: 52.489471, lng: -1.898575 }}>
-    {props.isMarkerShown && (
-      <Marker position={{ lat:  52.489471, lng: -1.898575 }} />
+  <GoogleMap defaultZoom={18} defaultCenter={{ lat: props.groups[0].centroid[0], lng: props.groups[0].centroid[1] }}>
+    {props.isMarkerShown && props.groups.map((group)=>{
+      
+     return <Circle
+     defaultCenter={{ lat:  +group.centroid[0], lng: +group.centroid[1] }}
+     radius={10}
+     options={
+      {
+        strokeColor: "#ff0000",
+        backgroundColor: "red"
+      }
+     }
+   />
+    }
     )}
   </GoogleMap>
 ));

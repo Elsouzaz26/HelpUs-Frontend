@@ -7,17 +7,13 @@ import Chat from "../../../../components/uielements/Chat/Chat";
 import ActiveUser from "../../../../components/uielements/ActiveUser/ActiveUser";
 import Message from "../../../../components/uielements/Message/Message";
 import { useDispatch, useSelector } from "react-redux";
-import rootReducer from "../../../../redux";
-import { configureStore } from "@reduxjs/toolkit";
 import { setChat } from "../../../../redux/chat";
 import Socket from "../../../../config/socket.config"
 import { Chats } from "../../../../service/Chat";
 import { userSelector } from "../../../../redux/user";
+import { chatSelector } from "../../../../redux/chat";
 import { Messages } from "../../../../service/Message";
 import {Toast} from "../../../../service/Toast";
-
-// import chat from "../../../../../../backend/models/chat";
-
 
 export default function ManagerChat() {
 
@@ -29,26 +25,43 @@ export default function ManagerChat() {
   const [To, setTo] = useState("")
   const [From, setFrom] = useState("")
   const [Newmessage, setNewmessage] = useState("")
-  const {user} = useSelector(userSelector);
+  const [activeUser, setactiveUser] = useState({})
+  const[active,setactive]=useState(false)
+  const { user } = useSelector(userSelector);
+  const { chat } = useSelector(chatSelector);
+  
+  const [chats, setChats] = useState([])
+  const [messages, setMessages] = useState([])
 
   useEffect(() => {
 
     (async () => {
-      Chats.getChats().then(res => {
-        console.log(res.data)
-        setChats([...res.data])
-      })
-        .catch(err => console.log(err))
+      getChats()
+
     })();
+
     if (typeof window !== undefined) {
       window.addEventListener("resize", handleResize)
     }
+
+
+    
   }, [])
 
-  // const store = configureStore({ reducer: rootReducer });
-  // const {users: {user}} =store.getState();
+
+  
+
+  const getChats = () => {
+    Chats.getChats().then(res => {
+      setChats([...res.data])
+    })
+      .catch(err => console.log(err))
+  }
+
 
   const handleResize = () => {
+
+    console.log(ActiveChatID)
     if (window.innerWidth > 768) {
       setShowMessageContainer(true)
       setShowChatContainer(true)
@@ -58,15 +71,10 @@ export default function ManagerChat() {
     }
   }
 
-  const [chats, setChats] = useState([])
-  const [messages, setMessages] = useState([])
 
   const handleBack = () => {
     setShowChatContainer(true)
     setShowMessageContainer(false)
-  }
-  const handleChange = (e) => {
-    setNewmessage(e.target.value)
   }
 
   const validate=()=>{
@@ -81,6 +89,9 @@ export default function ManagerChat() {
   const onSubmit = (e) => {
     e.preventDefault();
     if(validate()){
+
+    console.log(ActiveChatID)
+
     Socket.emit("new-message", {
       room: ActiveChatID,
       to: To,
@@ -99,39 +110,75 @@ export default function ManagerChat() {
     }
 
     let activeChat = chats.filter((chat, i) => i === index)[0];
-    console.log(activeChat)
-    setActiveChatId(activeChat._id)
-    console.log(user._id)
+
+    dispatch(setChat({ chat: activeChat }))
+
     if (activeChat.user1._id !== user._id) {
+      setactiveUser(activeChat.user1)
       setTo(activeChat.user1._id)
       setFrom(activeChat.user2._id)
     } else {
+      setactiveUser(activeChat.user2)
       setTo(activeChat.user2._id)
       setFrom(activeChat.user1._id)
     }
+
+
     Socket.emit("join-room", { room: activeChat._id })
-    // fetch last 10 message from chat here from service/chat
-    getMessaages(activeChat._id) // last 10 message
-    dispatch(setChat({ chat: activeChat }))
-    setChats(chats.map((chat, i) => {
-      i === index ? chat.active = true : chat.active = false
 
-      return chat
-    }))
-  }
-
-  const getMessaages = async(id) => {
-    Messages.getMessage(id).then((res) => {
-      console.log("res",res.data)
+    getMessages(activeChat._id).then((res) => {
       setMessages([...res.data])
-    }).catch()
+      scrollToBottom()
+    })
+
+    setActiveChatId(activeChat._id)
+    localStorage.setItem("activeChatId", activeChat._id)
+    setactive(true)
+
+    
+
+    
+
   }
 
 
-  Socket.on("on-new-message", (data) => {
-    console.log("frontend", data)
-    setMessages([...messages,data])
-  })
+  useEffect(() => {
+
+    Socket.on("on-new-message", (data) => {  
+      
+      console.log(data)      
+      if(data.chat == localStorage.getItem("activeChatId")) { 
+        setMessages([...messages, data])
+
+      } 
+
+      scrollToBottom()
+      getChats()
+    })
+    
+  }, [Socket, messages])
+
+  const getMessages = async (id, skip=0) => {
+    return Messages.getMessage(id, skip)
+  }
+
+  const scrollToBottom = () => {
+    let el = document.getElementsByClassName("message-box")[0]
+    if(el){
+    el.scrollTop = el.scrollHeight;
+    }
+  }
+
+
+  const handleScroll = (e, activeChatID, skip) => {
+    let el = document.getElementsByClassName("message-box")[0]
+    if (el.scrollTop === 0) {
+      getMessages(activeChatID,skip.length).then((res) => {
+      setMessages((res.data).concat([...messages]))
+    })
+  
+    } 
+  }
 
   return (
     <ViewWrapper>
@@ -161,40 +208,67 @@ export default function ManagerChat() {
                   <div className="chat-container ">
                     <div className="user-list">
                       {chats && chats.length > 0 && chats.map((chat, index) => {
-                        return <Chat chat={chat} handleChatClick={(index) => handleChatClick(index)} index={index} key={index} />
+                        return <Chat chat={chat} handleChatClick={(index) => handleChatClick(index)} activeChatID={ActiveChatID} index={index} key={index} />
                       })
                       }
                     </div>
 
                   </div>
                 </div>
+
                 <div className={showMessageContainer ? "show col-xl-9 col-lg-7 h-100 p-0" : "hide col-xl-9 col-lg-7 h-100 p-0"}>
-                  <ActiveUser onBack={handleBack} />
-                  <div className="message-box">
-                    {
-                      messages && messages.length > 0 && messages.map((message) => {
-                        return <Message message={message} />
-                      })
-                    }
-                  </div>
-                  <div className="send-box">
-                    <div className="row p-4">
 
-                      <div className="col-10">
-                        <input type="text" className="form-control message-input" value={Newmessage} onChange={handleChange} placeholder="write a message..." />
+                  {/* {
+                    messages && messages.length === 0 && (
+                      <div className="row h-100">
+                        <div className="col-12 h-100 flex-item">
+                          <span className="w-100 text-center">
+                            Click a Group leader to start a chat
+                          </span>
+                        </div>
                       </div>
-                      <div className="col-2">
-                        <button className="btn btn-primary br-15" onClick={onSubmit}>Send</button>
-                      </div>
-                    </div>
+                    )
+                  } */}
 
-                  </div>
+                  {
+                    active ? (
+                      <div className="h-100">
+                        <ActiveUser user={activeUser} onBack={handleBack} />
+                        <div className="message-box" id="message-container" onScroll={(e) => handleScroll(e, ActiveChatID, messages)} style={{ overflowX: "hidden" }}>
+                          {
+                            messages && messages.length > 0 && messages.map((message) => {
+                              return <Message message={message} />
+                            })
+                          }
+                        </div>
+                        <div className="send-box">
+                          <div className="row p-4">
+                            <div className="col-10">
+                              <input type="text" className="form-control message-input" value={Newmessage} onChange={(e) => setNewmessage(e.target.value)} placeholder="write a message..." />
+                            </div>
+                            <div className="col-2">
+                              <button className="btn btn-primary br-15" onClick={onSubmit}>Send</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ):
+                    (
+                      <div className="row h-100">
+                        <div className="col-12 h-100 flex-item">
+                          <span className="w-100 text-center">
+                          Click a Group leader to start a chat
+                          </span>
+                        </div>
+                      </div>
+                    )
+                  }
+
                 </div>
               </div>
             </div>
           </Paper>
         </div>
-
       </div>
     </ViewWrapper>
   );

@@ -21,6 +21,9 @@ import { useHistory } from 'react-router-dom';
 import { Senior } from "../../../../service/Senior";
 import { useState,useEffect } from "react";
 import moment from "moment"
+import Male from "../../../../assets/images/male-avatar.png"
+import Female from "../../../../assets/images/female-avatar.png"
+
 
 function createData(name, city, date, groupassigned) {
   return { name, city, date, groupassigned };
@@ -189,7 +192,7 @@ export default function EnhancedTable() {
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(8);
+  const [rowsPerPage, setRowsPerPage] = React.useState(25);
   const [users,setUsers]=useState([])
   useEffect(()=>{
 
@@ -284,7 +287,7 @@ export default function EnhancedTable() {
                             <span>
                               <a>
                                 <img
-                                  src={userpic}
+                                  src={users.gender == "male" ? Male : Female }
                                   height="40"
                                   width="40"
                                   className="rounded-circle border border-5"

@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import clone from "clone";
 import { Layout } from "antd";
 import options from "./options";
+import managerOptions from "./managerOptions";
 import Scrollbars from "../../components/utility/customScrollBar";
 import Menu from "../../components/uielements/menu";
 import appActions from "../../redux/app/actions";
@@ -10,6 +11,7 @@ import Logo from "../../components/utility/logo";
 import SidebarWrapper from "./Sidebar.styles";
 import SidebarMenu from "./SidebarMenu";
 import Sitelogo from "../../assets/images/HelpUs.jpg"
+import { userSelector } from "../../redux/user";
 const { Sider } = Layout;
 
 const {
@@ -29,6 +31,10 @@ export default function Sidebar() {
     current,
     height,
   } = useSelector((state) => state.App);
+
+  const {user} = useSelector(userSelector)
+
+  console.log(user)
   const customizedTheme = useSelector(
     (state) => state.ThemeSwitcher.sidebarTheme
   );
@@ -67,12 +73,16 @@ export default function Sidebar() {
 
   const isCollapsed = clone(collapsed) && !clone(openDrawer);
   const mode = isCollapsed === true ? "vertical" : "inline";
+
+ 
+
   const onMouseEnter = (event) => {
     if (collapsed && openDrawer === false) {
       dispatch(toggleOpenDrawer());
     }
     return;
   };
+ 
   const onMouseLeave = () => {
     if (collapsed && openDrawer === true) {
       dispatch(toggleOpenDrawer());
@@ -114,15 +124,29 @@ export default function Sidebar() {
             selectedKeys={current}
             onOpenChange={onOpenChange}
           >
-            {options.map((singleOption) => (
-              <SidebarMenu
-              
-                key={singleOption.key}
-                submenuStyle={submenuStyle}
-                submenuColor={submenuColor}
-                singleOption={singleOption}
-              />
-            ))}
+
+            {
+              user.role == "manager" ? 
+              managerOptions.map((singleOption) => (
+                <SidebarMenu
+                  key={singleOption.key}
+                  submenuStyle={submenuStyle}
+                  submenuColor={submenuColor}
+                  singleOption={singleOption}
+                />
+              ))
+              : 
+              options.map((singleOption) => (
+                <SidebarMenu
+                  key={singleOption.key}
+                  submenuStyle={submenuStyle}
+                  submenuColor={submenuColor}
+                  singleOption={singleOption}
+                />
+              ))
+            }
+
+            
           </Menu>
         </Scrollbars>
       </Sider>

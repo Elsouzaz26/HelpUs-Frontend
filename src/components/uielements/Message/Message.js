@@ -1,28 +1,26 @@
 import React, {useEffect, useState} from "react";
 import MessagePageWrapper from "./Message.styled";
 import Frame from "../../../assets/images/Frame.png"
+import Female from "../../../assets/images/female-avatar.png"
+import Male from "../../../assets/images/male-avatar.png"
+
+
 import { useDispatch, useSelector } from "react-redux";
 import rootReducer from "../../../redux";
 import { configureStore } from "@reduxjs/toolkit";
 import { userSelector } from "../../../redux/user";
 import { Messages } from "../../../service/Message";
+import { chatSelector } from "../../../redux/chat";
+
 export default function Message({message}) {
 
-  
-  // const store = configureStore({ reducer: rootReducer });
-  // const {users: {user}} =store.getState();
-//  const user={id:1}
-
-const {user}=useSelector(userSelector);
-console.log("user",user._id)
-
-console.log("message",message)
+  const {user}=useSelector(userSelector);
 
   return (
     <MessagePageWrapper>
       <div className="row">
         {
-          user && message && (user._id===message.from._id || user._id===message.from) ? 
+          user && message && (user._id===message.from._id) ? 
 
           // me in chat
           <div className="col-xl-6 col-lg-12 offset-xl-6 mb-3">
@@ -31,7 +29,7 @@ console.log("message",message)
               {message.message}               
             </span>
             <span className="float-right h-100 flex-reverse ">
-              <img src={Frame} className="user-image"/>
+              <img src={user? (user.gender == "male" ? Male : Female) : ""} className="user-image"/>
             </span> 
           </div>   
         </div>
@@ -44,15 +42,12 @@ console.log("message",message)
                 {message.message}                             
               </span>
               <span className="float-left h-100 flex-reverse ">
-                <img src={Frame} className="user-image"/>
+                <img src={user? (user.gender == "male" ? Male : Female) : ""} className="user-image"/>
               </span> 
             </div>   
         </div>
-         }
-       
-        
+         } 
       </div>  
-       
     </MessagePageWrapper>
   );
 }
