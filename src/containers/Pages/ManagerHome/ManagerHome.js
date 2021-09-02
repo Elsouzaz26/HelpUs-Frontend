@@ -40,7 +40,7 @@ const addASeniorView = (event) => {
   history.push('/dashboard/senior/add');
 }
 const editASeniorView = (event) => {
-  history.push("/dashboard/senior/edit");
+  history.push("/dashboard/senior/view");
 }
 const allVolenteerView = (event) => {
   history.push("/dashboard/volenteer/view");
@@ -49,7 +49,7 @@ const addAVolenteerView = (event) => {
   history.push('/dashboard/volenteer/add');
 }
 const editAVolenteerView = (event) => {
-  history.push("/dashboard/volenteer/edit");
+  history.push("/dashboard/volenteer/view");
 }
 
 

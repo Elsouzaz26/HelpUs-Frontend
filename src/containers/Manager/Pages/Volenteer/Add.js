@@ -9,7 +9,7 @@ const AddPage = () => {
   const [gender, setGender] = useState("");
   const [age, setAge] = useState("");
   const [fullName, setFullName] = useState("");
-  const [addressStreet, setAddressStreet] = useState("canada");
+  const [addressStreet, setAddressStreet] = useState("");
   const [addressCity, setAddressCity] = useState("");
   const [emailAddress, setEmailAddress] = useState("");
   const [telePhone, setTelePhone] = useState("");

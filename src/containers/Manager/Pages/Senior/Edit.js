@@ -148,7 +148,6 @@ const fullName=new URLSearchParams(location.search).get("fullName")
                       setLng(longitude);
                     }}
                     options={{
-                      componentRestrictions: { country: ["us", "ca"] },
                       fields: ["address_components", "geometry"],
                       types: ["address"],
                     }}

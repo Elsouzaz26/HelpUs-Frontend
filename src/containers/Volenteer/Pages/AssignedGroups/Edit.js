@@ -9,44 +9,54 @@ import { User } from "../../../../service/User";
 import { useHistory } from "react-router";
 const EditPage = () => {
     const [Seniors, setSeniors] = useState([])
-    const history = useHistory()
-
-    const handleChange = (data, id) => {
-        console.log(data)
-        console.log(id)
+    const [Location, setLocation] = useState("")
+    const [isMapShown, setIsMapShown] = useState(false)
+    let location = useLocation();
+    const groupId = new URLSearchParams(location.search).get("id");
+    
+    
+    console.log("location",Location.lng)
+    const handleChange = (data, id, index) => {
+        
         if (id) {
-            (async () => {
-                User.setSeniorstatus(id, data)
-                    .then((res) => {
-                        getSenior()
-                    })
-                    .catch((err) => console.log(err));
-            })();
+            User.setSeniorstatus(id, data)
+                .then((res) => {
+
+                    let seniors = Seniors
+                    seniors[index].deliveryStatus = data
+                    console.log(seniors)
+
+                    if(seniors.some(senior => senior.deliveryStatus !== "done" )) {
+                        Groups.updateGroup(groupId, "To do").then(res => {
+                            console.log(res)
+                        })
+                    } else {
+                        Groups.updateGroup(groupId, "Done").then(res => {
+                            console.log(res)
+                        })
+                    }
+                    // setSeniors(seniors)
+                    getSenior()
+                })
+                .catch((err) => console.log(err));
         }
     }
 
-    let location = useLocation();
-    const id = new URLSearchParams(location.search).get("id");
-    console.log("id", id)
 
-    const getSenior = () => {
-        Groups.getSeniorBygroupId(id)
-            .then((res) => {
-                console.log(res.data.data.senior)
-
+    const getSenior = async () => {
+        setIsMapShown(false)
+        Groups.getSeniorBygroupId(groupId)
+            .then(async (res) => {
                 
-                if (Seniors.filter(t => Object.values(t).includes("done")   ).length > 0) {
-                    Groups.updateGroup(id).then(res => {
-                        history.push("/volenteer/assignedgroups/view")
-                    })
-                } 
-
+                console.log(res.data.data.senior)
                 setSeniors(res.data.data.senior)
+                setIsMapShown(true)
+                 
             })
             .catch((err) => console.log(err));
     }
     useEffect(() => {
-        if (id) {
+        if (groupId) {
             (async () => {
                 getSenior()
             })();
@@ -59,9 +69,7 @@ const EditPage = () => {
                     <span className=" float-left flex-inline">
                         {" "}
                         <h4>Group Page</h4>
-                        <span>
-                            <a className="edit "> <ul>Edit on another ?</ul></a>
-                        </span>
+                        
 
                     </span>
                     <span className="text-right">
@@ -81,15 +89,15 @@ const EditPage = () => {
                                         className="btn btn-transparent border-0 float-left"
                                     > */}
                                     {Seniors.map((senior, index) => {
-                                        return <div className="row">
+                                        return <div className="row" >
                                             <p className="col-md-4">{senior.fullName}</p>
                                             <div className="col-md-4 rounded-lg" style={{ backgroundColor: "#dda0dd" }}>
-                                                <ul onChange={(e) => { handleChange(e.target.value, senior._id) }}>
+                                                <ul onChange={(e) => { handleChange(e.target.value, senior._id, index) }}>
                                                     <li style={{ listStyle: "none", display: "inline" }}>
-                                                        <input type="radio" name={index} value="done" />
+                                                        <input type="radio" name={index} value="done" checked={senior.deliveryStatus == "done"}/>
                                                         Done
                                                         <input type="radio" name={index}
-                                                            value="todo" id="custom_venuetype_private" />
+                                                            value="todo" id="custom_venuetype_private" checked={senior.deliveryStatus !== "done"}/>
                                                         To-do
                                                     </li>
                                                 </ul>
@@ -111,17 +119,28 @@ const EditPage = () => {
                             </a>
                         </div>
                     </div>
-                    <div className="row d-flex justify-content-center">
-                        <div className="col-md-10">
+                    <div className="col-md-5">
+                    {
+                        isMapShown?
+                        <MyMapComponent isMarkerShown markers={Seniors.map(senior => senior.location)} />
+                        : null
+                    }
 
-                            <MyMapComponent isMarkerShown lat={48.882775} lng={2.176931} />
+
+                        {/* { map ? 
+                         (
+                             <MyMapComponent isMarkerShown lat={Location.lat} lng={Location.lng} />
+                         ):(
+                             <MyMapComponent isMarkerShown lat={48.882775} lng={2.176931} />
+                         )
+                        }  */}
+                            
 
                             <div className="row ml-5 mt-4  d-flex justify-content-center">
                                 <span>{MapMarker}</span>{" "}
                                 <h6 className="ml-1 mt-1">Address where group leader have to deliver</h6>
                             </div>
                         </div>
-                    </div>
 
                 </div>
             </div>

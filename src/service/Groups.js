@@ -14,7 +14,10 @@ export const Groups = {
   },
   async getGroupsByDateAndCity(city, date) { 
     return await instance
-     .get(`/getgroupByDateAndCity?city=${city}&date=${date}`)
+     .post(`/getgroupByDateAndCity`, {
+       city,
+       date 
+     })
      .then((res) => {
        return res
      }).catch(err => {
@@ -56,10 +59,11 @@ export const Groups = {
    })
 },
 
-async updateGroup(id) { 
+async updateGroup(id, status) { 
   console.log("newid",id)
+  console.log(status)
   return await instance
-   .put(`/updategroup/${id}`, {status: "Done"})
+   .put(`/updategroup/${id}`, {status: status})
    .then((res) => {
      return res
    }).catch(err => {
@@ -67,5 +71,5 @@ async updateGroup(id) {
      return false
    })
 },
- 
+
 };

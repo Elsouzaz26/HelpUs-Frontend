@@ -221,7 +221,6 @@ const AddPage = () => {
                       setLng(longitude);
                     }}
                     options={{
-                      componentRestrictions: { country: ["us", "ca"] },
                       fields: ["address_components", "geometry"],
                       types: ["address"],
                     }}

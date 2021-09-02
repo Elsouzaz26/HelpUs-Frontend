@@ -81,7 +81,7 @@ const LoginPage = () => {
             <div className="">
               <img className="toprect " src={topRect} alt="Login_Image" />
               <h3 className="mt-4 text-white">Join Over 52 Million </h3>
-              <h3 className=" text-white"> Volenteer from around the world</h3>
+              <h3 className=" text-white"> Volunteers from around the world</h3>
 
               <p className="mb-5 h6l ">Distribution is organized on a daily basis. The distribution manager is responsible for entering details, creating a group of addresses for efficient distribution,</p>
 

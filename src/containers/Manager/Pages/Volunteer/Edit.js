@@ -108,14 +108,13 @@ const EditPage = () => {
                     apiKey={"AIzaSyC43U2-wqXxYEk1RBrTLdkYt3aDoOxO4Fw"}
                     onPlaceSelected={(place) => {
                       console.log(place);
-                      setAddressStreet(place.formatted_address);
+                      setAddressStreet(place.address_components[0].long_name);
                       const latitude = place.geometry.location.lat() + Math.floor(Math.random() * 10)* 0.000001;
                       const longitude = place.geometry.location.lng() + Math.floor(Math.random() * 10)* 0.000001;
                       setLat(latitude);
                       setLng(longitude);
                     }}
                     options={{
-                      componentRestrictions: { country: ["us", "ca"] },
                       fields: ["address_components", "geometry"],
                       types: ["address"],
                     }}

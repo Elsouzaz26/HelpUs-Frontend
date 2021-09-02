@@ -218,7 +218,9 @@ export default function EnhancedTable() {
   const getDistribution = () => {
     Distributions.getDistributions()
         .then((res) => {
-          setDistributions(res.data);
+          setDistributions(res.data.filter((r) => {
+            return r.status !== 'To do'
+          }));
         })
         .catch((err) => console.log(err));
   }

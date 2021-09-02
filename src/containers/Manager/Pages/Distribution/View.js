@@ -198,6 +198,7 @@ export default function EnhancedTable() {
       
       Distributions.getDistributions().then(res => {
         console.log(res)
+        
         setDistributions(res.data)
       })
       .catch(err=> console.log(err))

@@ -45,7 +45,7 @@ const addASeniorView = (event) => {
   history.push('/manager/senior/add');
 }
 const editASeniorView = (event) => {
-  history.push("/manager/senior/edit");
+  history.push("/manager/senior/view");
 }
 const allVolunteerView = (event) => {
   history.push("/manager/volunteer/view");
@@ -54,7 +54,7 @@ const addAVolunteerView = (event) => {
   history.push('/manager/volunteer/add');
 }
 const editAVolunteerView = (event) => {
-  history.push("/manager/volunteer/edit");
+  history.push("/manager/volunteer/view");
 }
 const allDistributerView = (event) => {
   history.push("/manager/distribution/view");
@@ -111,7 +111,7 @@ const editADistributerView = (event) => {
           <div className="col-md-4">
             <div class="card  " onMouseEnter={bgEnter1} onMouseLeave={bgLeaver1} style={{ background:`${cardColor1}`,height:"35.5rem" }}>
               <img class="card-img-top" src={volunteer} alt="Card image cap" />
-              <h3 className="text-center">VOLuNTEER</h3>
+              <h3 className="text-center">VOLUNTEER</h3>
               <div className="p-2 mt-5">
                 <a onClick={allVolunteerView} class="btn btn-light w-100">
                   ALL VOLUNTEER VIEW

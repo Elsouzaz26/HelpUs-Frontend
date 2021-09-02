@@ -226,7 +226,7 @@ export default function EnhancedTable() {
     history.push('/manager/senior/add');
   }
   const gotoEditSenior = (event) => {
-    history.push('/manager/senior/edit');
+    history.push('/manager/senior/view');
   }
   const emptyRows =
     rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);

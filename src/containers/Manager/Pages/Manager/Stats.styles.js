@@ -11,13 +11,23 @@ color: #373A3C!important
     width: 400px
 }
 
-right-side {
-    width: calc(100% - 450px)
+.right-side {
+    width: calc(100%  - 400px)
 }
 
 .col-50 {
-    display: inline-grid
+    display: inline-grid;
+    width: 50%
 }
+
+.scrollbar-hidden::-webkit-scrollbar {
+    display: none;
+  }
+
+  .scrollbar-hidden {
+    -ms-overflow-style: none;
+    scrollbar-width: none; 
+  }
 `
 
 export {StatWrapper}
